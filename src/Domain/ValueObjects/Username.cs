@@ -14,4 +14,9 @@ public class Username : ValueOf<string, Username>
             throw new ArgumentException("Value is not a valid e-mail address", nameof(Value));
         }
     }
+
+    protected override bool TryValidate()
+    {
+        return MailAddress.TryCreate(Value, out var _);
+    }
 }
