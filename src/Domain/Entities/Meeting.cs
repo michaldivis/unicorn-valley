@@ -10,12 +10,21 @@ public class Meeting : EntityBase
     private readonly List<Invitation> _invitations = new();
     public IReadOnlyCollection<Invitation> Invitations => _invitations.AsReadOnly();
 
-    public Meeting(Guid id, User creator, MeetingType type, DateTime scheduledAtUtc, string name) : base(id)
+    private Meeting(Guid id, User creator, MeetingType type, DateTime scheduledAtUtc, string name) : base(id)
     {
         Creator = creator;
         Type = type;
         ScheduledAtUtc = scheduledAtUtc;
         Name = name;
+    }
+
+    public static Result<Meeting> Create(Guid id, User creator, MeetingType type, DateTime scheduledAtUtc, string name)
+    {
+        //TODO add meeting validation 
+
+        var meeting = new Meeting(id, creator, type, scheduledAtUtc, name);
+
+        return meeting;
     }
 
     public Result<Invitation> SendInvitation(User user)
