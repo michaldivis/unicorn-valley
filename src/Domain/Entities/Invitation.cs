@@ -7,11 +7,11 @@ public class Invitation : EntityBase
     public InvitationStatus Status { get; private set; }
     public DateTime CreatedAtUtc { get; private set; }
 
-    public Invitation(Guid id, User user, Meeting meeting) : base(id)
+    internal Invitation(Guid id, User user, Meeting meeting) : base(id)
     {
         UserId = user.Id;
         MeetingId = meeting.Id;
         Status = InvitationStatus.Pending;
-        CreatedAtUtc = DateTime.UtcNow; //TODO set time from date time provider
+        CreatedAtUtc = DateTime.UtcNow;
     }
 }

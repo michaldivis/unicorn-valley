@@ -1,4 +1,5 @@
-﻿using ValueOf;
+﻿using System.Net.Mail;
+using ValueOf;
 
 namespace UnicornValley.Domain.ValueObjects;
 
@@ -6,7 +7,11 @@ public class Username : ValueOf<string, Username>
 {
     protected override void Validate()
     {
-        base.Validate();
-        //TODO ensure Username is a valid email address
+        var isValid = MailAddress.TryCreate(Value, out var _);
+
+        if (!isValid)
+        {
+            throw new ArgumentException("Value is not a valid e-mail address", nameof(Value));
+        }
     }
 }

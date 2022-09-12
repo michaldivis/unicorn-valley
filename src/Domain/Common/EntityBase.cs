@@ -10,17 +10,17 @@ public abstract class EntityBase
         Id = id;
     }
 
-    private readonly List<EventBase> _domainEvents = new();
+    private readonly List<DomainEventBase> _domainEvents = new();
 
     [NotMapped]
-    public IReadOnlyCollection<EventBase> DomainEvents => _domainEvents.AsReadOnly();
+    public IReadOnlyCollection<DomainEventBase> DomainEvents => _domainEvents.AsReadOnly();
 
-    public void AddDomainEvent(EventBase domainEvent)
+    public void AddDomainEvent(DomainEventBase domainEvent)
     {
         _domainEvents.Add(domainEvent);
     }
 
-    public void RemoveDomainEvent(EventBase domainEvent)
+    public void RemoveDomainEvent(DomainEventBase domainEvent)
     {
         _ = _domainEvents.Remove(domainEvent);
     }

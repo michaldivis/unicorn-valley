@@ -17,4 +17,23 @@ public class Meeting : EntityBase
         ScheduledAtUtc = scheduledAtUtc;
         Name = name;
     }
+
+    public Result<Invitation> SendInvitation(User user)
+    {
+        if(user.Id == Creator.Id)
+        {
+            return Result.Fail(DomainErrors.Meeting.InvitingCreator);
+        }
+
+        if(ScheduledAtUtc < DateTime.UtcNow)
+        {
+            return Result.Fail(DomainErrors.Meeting.AlreadyPassed);
+        }
+
+        var invitation = new Invitation(Guid.NewGuid(), user, this);
+
+        _invitations.Add(invitation);
+
+        return invitation;
+    }
 }
