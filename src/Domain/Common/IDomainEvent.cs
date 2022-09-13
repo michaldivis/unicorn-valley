@@ -2,7 +2,7 @@
 
 namespace UnicornValley.Domain.Common;
 
-public abstract class DomainEventBase : INotification
+public interface IDomainEvent : INotification
 {
 
 }

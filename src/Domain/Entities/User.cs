@@ -1,6 +1,6 @@
 ﻿namespace UnicornValley.Domain.Entities;
 
-public class User : EntityBase
+public class User : Entity
 {
     public Username Username { get; private set; }
 

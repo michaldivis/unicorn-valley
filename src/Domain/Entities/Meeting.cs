@@ -1,6 +1,6 @@
 ﻿namespace UnicornValley.Domain.Entities;
 
-public class Meeting : EntityBase
+public class Meeting : Entity
 {
     private readonly List<Attendee> _attendees = new();
     private readonly List<Invitation> _invitations = new();
@@ -71,5 +71,30 @@ public class Meeting : EntityBase
         _invitations.Add(invitation);
 
         return invitation;
+    }
+
+    public Result<Attendee> AcceptInvitation(Invitation invitation)
+    {
+        var isExpired = Type switch
+        {
+            MeetingType.WithLimitedNumberOfAttendees => NumberOfAttendees >= MaximumNumberOfAttendees,
+            MeetingType.WithExpirationForInvitations => InvitationsExpireAtUtc < DateTime.UtcNow,
+            _ => throw ExhaustiveMatch.Failed(Type)
+        };
+
+        if (isExpired)
+        {
+            invitation.Expire();
+            return Result.Fail(DomainErrors.Meeting.InvitationExpired);
+        }
+
+        var attendee = invitation.Accept();
+
+        _attendees.Add(attendee);
+        NumberOfAttendees++;
+
+        RaiseDomainEvent(new InvitationAccepted(invitation.Id, Id));
+
+        return attendee;
     }
 }

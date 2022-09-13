@@ -1,15 +1,15 @@
 ﻿namespace UnicornValley.Domain.Entities;
 
-public class Attendee : EntityBase
+public class Attendee : Entity
 {
     public Guid UserId { get; private set; }
     public Guid MeetingId { get; private set; }
     public DateTime JoinedAtUtc { get; private set; }
 
-    public Attendee(Guid id, Guid userId, Guid meetingId, DateTime joinedAtUtc) : base(id)
+    internal Attendee(Invitation invitation) : base(Guid.NewGuid())
     {
-        UserId = userId;
-        MeetingId = meetingId;
-        JoinedAtUtc = joinedAtUtc;
+        UserId = invitation.UserId;
+        MeetingId = invitation.MeetingId;
+        JoinedAtUtc = DateTime.UtcNow;
     }
 }
