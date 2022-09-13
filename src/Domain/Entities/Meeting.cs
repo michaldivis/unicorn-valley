@@ -2,27 +2,54 @@
 
 public class Meeting : EntityBase
 {
+    private readonly List<Attendee> _attendees = new();
+    private readonly List<Invitation> _invitations = new();
+
     public User Creator { get; private set; }
     public MeetingType Type { get; private set; }
     public DateTime ScheduledAtUtc { get; private set; }
     public string Name { get; private set; }
+    public string Location { get; private set; }
 
-    private readonly List<Invitation> _invitations = new();
+    public int? MaximumNumberOfAttendees { get; private set; }
+    public DateTime? InvitationsExpireAtUtc { get; private set; }
+    public int NumberOfAttendees { get; private set; }    
+
+    public IReadOnlyCollection<Attendee> Attendees => _attendees.AsReadOnly();
     public IReadOnlyCollection<Invitation> Invitations => _invitations.AsReadOnly();
 
-    private Meeting(Guid id, User creator, MeetingType type, DateTime scheduledAtUtc, string name) : base(id)
+    private Meeting(Guid id, User creator, MeetingType type, DateTime scheduledAtUtc, string name, string location) : base(id)
     {
         Creator = creator;
         Type = type;
         ScheduledAtUtc = scheduledAtUtc;
         Name = name;
-    }
+        Location = location;
+    }    
 
-    public static Result<Meeting> Create(Guid id, User creator, MeetingType type, DateTime scheduledAtUtc, string name)
+    public static Result<Meeting> Create(Guid id, User creator, MeetingType type, DateTime scheduledAtUtc, string name, string location, int? maximumNumberOfAttendees, int? invitationValidBeforeInHours)
     {
-        //TODO add meeting validation 
+        var meeting = new Meeting(id, creator, type, scheduledAtUtc, name, location);
 
-        var meeting = new Meeting(id, creator, type, scheduledAtUtc, name);
+        switch (type)
+        {
+            case MeetingType.WithLimitedNumberOfAttendees:
+                if(maximumNumberOfAttendees is null)
+                {
+                    return Result.Fail(DomainErrors.Meeting.MaximumNumberOfAttendeesMissing);
+                }
+                meeting.MaximumNumberOfAttendees = maximumNumberOfAttendees;
+                break;
+            case MeetingType.WithExpirationForInvitations:
+                if (invitationValidBeforeInHours is null)
+                {
+                    return Result.Fail(DomainErrors.Meeting.InvitationValidBeforeInHoursMissing);
+                }
+                meeting.InvitationsExpireAtUtc = scheduledAtUtc.AddHours(-invitationValidBeforeInHours.Value);
+                break;
+            default:
+                throw ExhaustiveMatch.Failed(type);
+        }
 
         return meeting;
     }
