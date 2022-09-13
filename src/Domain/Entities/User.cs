@@ -1,6 +1,6 @@
 ﻿namespace UnicornValley.Domain.Entities;
 
-public class User : Entity
+public class User : AggregateRoot
 {
     public Username Username { get; private set; }
 

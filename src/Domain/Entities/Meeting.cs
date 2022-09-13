@@ -1,6 +1,6 @@
 ﻿namespace UnicornValley.Domain.Entities;
 
-public class Meeting : Entity
+public class Meeting : AggregateRoot
 {
     private readonly List<Attendee> _attendees = new();
     private readonly List<Invitation> _invitations = new();
