@@ -1,4 +1,6 @@
-﻿namespace UnicornValley.Domain.Entities;
+﻿using static UnicornValley.Domain.Common.DomainErrors;
+
+namespace UnicornValley.Domain.Entities;
 
 public class Meeting : AggregateRoot
 {
@@ -31,6 +33,18 @@ public class Meeting : AggregateRoot
     {
         var meeting = new Meeting(id, creator, type, scheduledAtUtc, name, location);
 
+        var initializationResult = type switch
+        {
+            MeetingType.WithLimitedNumberOfAttendees => InitializeWithLimitedNumberOfAttendees(meeting, maximumNumberOfAttendees),
+            MeetingType.WithExpirationForInvitations => InitializeWithExpirationForInvitations(meeting, scheduledAtUtc, invitationValidBeforeInHours),
+            _ => throw ExhaustiveMatch.Failed(type)
+        };
+
+        if (initializationResult.IsFailed)
+        {
+            return initializationResult;
+        }
+
         switch (type)
         {
             case MeetingType.WithLimitedNumberOfAttendees:
@@ -52,6 +66,30 @@ public class Meeting : AggregateRoot
         }
 
         return meeting;
+    }
+
+    private static Result InitializeWithLimitedNumberOfAttendees(Meeting meeting, int? maximumNumberOfAttendees)
+    {
+        if (maximumNumberOfAttendees is null)
+        {
+            return Result.Fail(DomainErrors.Meeting.MaximumNumberOfAttendeesMissing);
+        }
+
+        meeting.MaximumNumberOfAttendees = maximumNumberOfAttendees;
+
+        return Result.Ok();
+    }
+
+    private static Result InitializeWithExpirationForInvitations(Meeting meeting, DateTime scheduledAtUtc, int? invitationValidBeforeInHours)
+    {
+        if (invitationValidBeforeInHours is null)
+        {
+            return Result.Fail(DomainErrors.Meeting.InvitationValidBeforeInHoursMissing);
+        }
+
+        meeting.InvitationsExpireAtUtc = scheduledAtUtc.AddHours(-invitationValidBeforeInHours.Value);
+
+        return Result.Ok();
     }
 
     public Result<Invitation> SendInvitation(User user)
