@@ -11,6 +11,7 @@ public static class DomainErrors
         public static readonly DomainError MaximumNumberOfAttendeesMissing = Create("Maximum number of attendees is missing.");
         public static readonly DomainError InvitationValidBeforeInHoursMissing = Create("Invitation valid before in hours is missing.");
         public static readonly DomainError InvitationExpired = Create("Invitation is expired.");
+        public static readonly DomainError NotFoundById = Create("Meeting with this ID not found.");
 
         private static DomainError Create(string message, [CallerMemberName] string code = "")
 		{

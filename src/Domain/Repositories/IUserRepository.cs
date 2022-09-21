@@ -1,6 +1,5 @@
 ﻿namespace UnicornValley.Domain.Repositories;
 
-public interface IUserRepository
+public interface IUserRepository : IRepository<User>
 {
-    Task<Result<User>> FindByIdAsync(Guid id, CancellationToken cancellationToken);
 }

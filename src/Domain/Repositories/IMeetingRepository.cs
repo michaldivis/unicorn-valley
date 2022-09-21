@@ -1,7 +1,5 @@
 ﻿namespace UnicornValley.Domain.Repositories;
 
-public interface IMeetingRepository
+public interface IMeetingRepository : IRepository<Meeting>
 {
-    Task<Result<Meeting>> FindByIdAsync(Guid id, CancellationToken cancellationToken);
-    void Add(Meeting meeting);
 }

@@ -1,8 +1,6 @@
 ﻿namespace UnicornValley.Domain.Repositories;
 
-public interface IInvitationRepository
+public interface IInvitationRepository : IRepository<Invitation>
 {
-    Task<Result<Invitation>> FindByIdAsync(Guid id, CancellationToken cancellationToken);
-    void Add(Invitation invitation);
 }
 
