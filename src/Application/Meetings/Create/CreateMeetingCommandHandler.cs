@@ -1,5 +1,5 @@
 ﻿namespace UnicornValley.Application.Meetings.Create;
-public class CreateMeetingCommandHandler : IRequestHandler<CreateMeetingCommand>
+public class CreateMeetingCommandHandler : IRequestHandler<CreateMeetingCommand, Result<Meeting>>
 {
     private readonly IUserRepository _userRepository;
     private readonly IMeetingRepository _meetingRepository;
@@ -14,14 +14,14 @@ public class CreateMeetingCommandHandler : IRequestHandler<CreateMeetingCommand>
         _errorHandler = errorHandler;
     }
 
-    public async Task<Unit> Handle(CreateMeetingCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Meeting>> Handle(CreateMeetingCommand request, CancellationToken cancellationToken)
     {
         var userResult = await _userRepository.FindByIdAsync(request.CreatorId, cancellationToken);
 
         if(userResult.IsFailed)
         {
             await _errorHandler.HandleAsync(userResult, cancellationToken);
-            return Unit.Value;
+            return userResult.ToResult<Meeting>();
         }
 
         var meetingResult = Meeting.Create(Guid.NewGuid(), userResult.Value, request.Type, request.ScheduledAtUtc, request.Name, request.Location, request.MaximumNumberOfAttendees, request.InvitationValidBeforeInHours);
@@ -29,13 +29,13 @@ public class CreateMeetingCommandHandler : IRequestHandler<CreateMeetingCommand>
         if (meetingResult.IsFailed)
         {
             await _errorHandler.HandleAsync(meetingResult, cancellationToken);
-            return Unit.Value;
+            return meetingResult;
         }
 
         _meetingRepository.Add(meetingResult.Value);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Unit.Value;
+        return meetingResult;
     }
 }

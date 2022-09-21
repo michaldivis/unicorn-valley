@@ -1,6 +1,6 @@
 ﻿namespace UnicornValley.Application.Invitations.Send;
 
-public class SendInvitationCommandHandler : IRequestHandler<SendInvitationCommand>
+public class SendInvitationCommandHandler : IRequestHandler<SendInvitationCommand, Result<Invitation>>
 {
     private readonly IUserRepository _userRepository;
     private readonly IMeetingRepository _meetingRepository;
@@ -17,35 +17,33 @@ public class SendInvitationCommandHandler : IRequestHandler<SendInvitationComman
         _errorHandler = errorHandler;
     }
 
-    public async Task<Unit> Handle(SendInvitationCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Invitation>> Handle(SendInvitationCommand request, CancellationToken cancellationToken)
     {
         var userResult = await _userRepository.FindByIdAsync(request.UserId, cancellationToken);
         if (userResult.IsFailed)
         {
             await _errorHandler.HandleAsync(userResult, cancellationToken);
-            return Unit.Value;
+            return userResult.ToResult<Invitation>();
         }
 
         var meetingResult = await _meetingRepository.FindByIdAsync(request.MeetingId, cancellationToken);
         if (meetingResult.IsFailed)
         {
             await _errorHandler.HandleAsync(meetingResult, cancellationToken);
-            return Unit.Value;
+            return meetingResult.ToResult<Invitation>();
         }
 
         var invitationResult = meetingResult.Value.SendInvitation(userResult.Value);
         if (invitationResult.IsFailed)
         {
             await _errorHandler.HandleAsync(invitationResult, cancellationToken);
-            return Unit.Value;
+            return invitationResult;
         }
 
         _invitationRepository.Add(invitationResult.Value);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        //TODO send notification
-
-        return Unit.Value;
+        return invitationResult;
     }
 }
