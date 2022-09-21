@@ -1,6 +1,4 @@
-﻿using static UnicornValley.Domain.Common.DomainErrors;
-
-namespace UnicornValley.Domain.Entities;
+﻿namespace UnicornValley.Domain.Entities;
 
 public class Meeting : AggregateRoot
 {
@@ -43,26 +41,6 @@ public class Meeting : AggregateRoot
         if (initializationResult.IsFailed)
         {
             return initializationResult;
-        }
-
-        switch (type)
-        {
-            case MeetingType.WithLimitedNumberOfAttendees:
-                if(maximumNumberOfAttendees is null)
-                {
-                    return Result.Fail(DomainErrors.Meeting.MaximumNumberOfAttendeesMissing);
-                }
-                meeting.MaximumNumberOfAttendees = maximumNumberOfAttendees;
-                break;
-            case MeetingType.WithExpirationForInvitations:
-                if (invitationValidBeforeInHours is null)
-                {
-                    return Result.Fail(DomainErrors.Meeting.InvitationValidBeforeInHoursMissing);
-                }
-                meeting.InvitationsExpireAtUtc = scheduledAtUtc.AddHours(-invitationValidBeforeInHours.Value);
-                break;
-            default:
-                throw ExhaustiveMatch.Failed(type);
         }
 
         return meeting;
