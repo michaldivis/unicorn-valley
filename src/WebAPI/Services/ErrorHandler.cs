@@ -5,9 +5,9 @@ namespace UnicornValley.WebAPI.Services;
 
 public class ErrorHandler : IErrorHandler
 {
-    private readonly Logger<ErrorHandler> _logger;
+    private readonly ILogger<ErrorHandler> _logger;
 
-    public ErrorHandler(Logger<ErrorHandler> logger)
+    public ErrorHandler(ILogger<ErrorHandler> logger)
     {
         _logger = logger;
     }
