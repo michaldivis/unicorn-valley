@@ -7,6 +7,7 @@ using UnicornValley.Domain.Repositories;
 using UnicornValley.Infrastructure;
 using UnicornValley.Infrastructure.Repositories;
 using UnicornValley.WebAPI.Services;
+using Microsoft.EntityFrameworkCore;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -25,7 +26,7 @@ try
     builder.Logging.AddSerilog();
 
     //TODO configure DB context
-    builder.Services.AddDbContext<AppDbContext>();
+    builder.Services.AddDbContext<AppDbContext>(o => o.UseInMemoryDatabase("InMemoryDb"));
 
     //register api-specific services
     builder.Services.AddSingleton<IErrorHandler, ErrorHandler>();
