@@ -4,7 +4,6 @@
     <TargetFramework>net6.0</TargetFramework>
 	<RootNamespace>UnicornValley.Application</RootNamespace>
 	<AssemblyName>UnicornValley.Application</AssemblyName>
-	<ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 

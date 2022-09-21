@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using UnicornValley.Domain.Common;
-using UnicornValley.Domain.Repositories;
 
 namespace UnicornValley.Infrastructure.Repositories;
 
@@ -15,7 +13,7 @@ public abstract class GenericRepository<TEntity> : IRepository<TEntity> where TE
 
     protected abstract string[] IncludeProperties { get; }
 
-    public async Task<TEntity?> FindByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<Result<TEntity>> FindByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var query = _dbSet.Where(a => a.Id == id);
 
@@ -24,7 +22,14 @@ public abstract class GenericRepository<TEntity> : IRepository<TEntity> where TE
             query = query.Include(includeProperty);
         }
 
-        return await query.FirstOrDefaultAsync(cancellationToken);
+        var result = await query.FirstOrDefaultAsync(cancellationToken);
+
+        if(result is null)
+        {
+            return Result.Fail(DomainErrors.Common.NotFoundById);
+        }
+
+        return result;
     }
 
     public void Add(TEntity entity)

@@ -4,7 +4,6 @@
     <TargetFramework>net6.0</TargetFramework>
 	<RootNamespace>UnicornValley.Infrastructure</RootNamespace>
 	<AssemblyName>UnicornValley.Infrastructure</AssemblyName>
-	<ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
