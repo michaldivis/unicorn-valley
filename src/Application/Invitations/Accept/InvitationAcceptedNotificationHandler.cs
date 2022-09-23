@@ -1,11 +1,11 @@
 ﻿namespace UnicornValley.Application.Invitations.Accept;
-public class InvitationAcceptedHandler : INotificationHandler<InvitationAccepted>
+public class InvitationAcceptedNotificationHandler : INotificationHandler<InvitationAccepted>
 {
     private readonly IEmailService _emailService;
     private readonly IMeetingRepository _meetingRepository;
     private readonly IErrorHandler _errorHandler;
 
-    public InvitationAcceptedHandler(IEmailService emailService, IMeetingRepository meetingRepository, IErrorHandler errorHandler)
+    public InvitationAcceptedNotificationHandler(IEmailService emailService, IMeetingRepository meetingRepository, IErrorHandler errorHandler)
     {
         _emailService = emailService;
         _meetingRepository = meetingRepository;
