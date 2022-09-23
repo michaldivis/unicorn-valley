@@ -9,6 +9,7 @@ using UnicornValley.Infrastructure.Repositories;
 using UnicornValley.WebAPI.Services;
 using Microsoft.EntityFrameworkCore;
 using UnicornValley.WebAPI.SeedData;
+using FastEndpoints.Swagger;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -42,20 +43,18 @@ try
 
     builder.Services.AddMediatR(typeof(UnicornValley.Application.Marker));
     builder.Services.AddFastEndpoints();
+    builder.Services.AddSwaggerDoc();
 
-    builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen();
-
-    var app = builder.Build();
-
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-    }
+    var app = builder.Build();    
 
     app.UseHttpsRedirection();
     app.UseFastEndpoints();
+
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseOpenApi();
+        app.UseSwaggerUi3(s => s.ConfigureDefaults());
+    }
 
     SeedDataInitializer.AddSeedData(app);
 
