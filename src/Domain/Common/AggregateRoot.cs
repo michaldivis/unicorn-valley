@@ -4,11 +4,6 @@ namespace UnicornValley.Domain.Common;
 
 public abstract class AggregateRoot : Entity
 {
-    protected AggregateRoot(Guid id) : base(id)
-    {
-        
-    }
-
     private readonly List<IDomainEvent> _domainEvents = new();
 
     [NotMapped]

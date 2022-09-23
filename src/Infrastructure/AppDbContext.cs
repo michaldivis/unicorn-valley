@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using UnicornValley.Domain.Entities;
 
 namespace UnicornValley.Infrastructure;
 public class AppDbContext : DbContext
@@ -18,4 +17,9 @@ public class AppDbContext : DbContext
 	{
 	}
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<User>().OwnsOne(a => a.Username);
+    }
 }

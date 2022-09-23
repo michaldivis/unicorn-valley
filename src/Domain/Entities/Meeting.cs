@@ -5,6 +5,7 @@ public class Meeting : AggregateRoot
     private readonly List<Attendee> _attendees = new();
     private readonly List<Invitation> _invitations = new();
 
+    public override Guid Id { get; protected set; }
     public User Creator { get; private set; }
     public MeetingType Type { get; private set; }
     public DateTime ScheduledAtUtc { get; private set; }
@@ -18,14 +19,20 @@ public class Meeting : AggregateRoot
     public IReadOnlyCollection<Attendee> Attendees => _attendees.AsReadOnly();
     public IReadOnlyCollection<Invitation> Invitations => _invitations.AsReadOnly();
 
-    private Meeting(Guid id, User creator, MeetingType type, DateTime scheduledAtUtc, string name, string location) : base(id)
+    private Meeting(Guid id, User creator, MeetingType type, DateTime scheduledAtUtc, string name, string location)
     {
+        Id = id;
         Creator = creator;
         Type = type;
         ScheduledAtUtc = scheduledAtUtc;
         Name = name;
         Location = location;
-    }    
+    }
+
+    [Obsolete("To be used by EF Core only")]
+    internal Meeting()
+    {
+    }
 
     public static Result<Meeting> Create(Guid id, User creator, MeetingType type, DateTime scheduledAtUtc, string name, string location, int? maximumNumberOfAttendees, int? invitationValidBeforeInHours)
     {
