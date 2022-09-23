@@ -27,7 +27,7 @@ try
         .CreateLogger();
     builder.Logging.AddSerilog(logger);
 
-    //TODO configure DB context
+    //configure DB context
     builder.Services.AddDbContext<AppDbContext>(o => o.UseInMemoryDatabase("InMemoryDb"));
 
     //register api-specific services
