@@ -1,5 +1,4 @@
-﻿using UnicornValley.Domain.Entities;
-using UnicornValley.Domain.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace UnicornValley.Infrastructure.Repositories;
 
@@ -11,4 +10,10 @@ public class UserRepository : GenericRepository<User>, IUserRepository
 
     private string[]? _includeProperties;
     protected override string[] IncludeProperties => _includeProperties ??= Array.Empty<string>();
+
+    public async Task<bool> IsUsernameUniqueAsync(Username username)
+    {
+        var alreadyExists = await _dbSet.AnyAsync(a => a.Username.Value == username.Value);
+        return !alreadyExists;
+    }
 }

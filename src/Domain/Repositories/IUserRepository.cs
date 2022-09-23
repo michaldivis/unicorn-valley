@@ -2,4 +2,5 @@
 
 public interface IUserRepository : IRepository<User>
 {
+    Task<bool> IsUsernameUniqueAsync(Username username);
 }

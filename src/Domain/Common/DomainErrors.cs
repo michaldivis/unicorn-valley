@@ -27,4 +27,15 @@ public static class DomainErrors
             return new($"{nameof(Meeting)}.{code}", message);
         }
     }
+
+    public static class User
+    {
+        public static readonly DomainError UsernameAlreadyExists = Create("A user with this username already exists.");
+        public static readonly DomainError InvalidUsername = Create("Username not in a valid format.");
+
+        private static DomainError Create(string message, [CallerMemberName] string code = "")
+        {
+            return new($"{nameof(User)}.{code}", message);
+        }
+    }
 }

@@ -15,4 +15,16 @@ public class User : AggregateRoot
     internal User()
     {
     }
+
+    public static Result<User> Create(Guid id, Username username, bool isUsernameUnique)
+    {
+        if (!isUsernameUnique)
+        {
+            return Result.Fail(DomainErrors.User.UsernameAlreadyExists);
+        }
+
+        var user = new User(id, username);
+
+        return user;
+    }
 }
