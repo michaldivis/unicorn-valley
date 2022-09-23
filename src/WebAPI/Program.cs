@@ -8,6 +8,7 @@ using UnicornValley.Infrastructure;
 using UnicornValley.Infrastructure.Repositories;
 using UnicornValley.WebAPI.Services;
 using Microsoft.EntityFrameworkCore;
+using UnicornValley.WebAPI.SeedData;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -55,6 +56,8 @@ try
 
     app.UseHttpsRedirection();
     app.UseFastEndpoints();
+
+    SeedDataInitializer.AddSeedData(app);
 
     app.Run();
 
