@@ -1,7 +1,4 @@
-﻿using FastEndpoints;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using UnicornValley.Infrastructure;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace UnicornValley.WebAPI.Endpoints.Users;
 
@@ -18,7 +15,8 @@ public class GetAllEndpoint : EndpointWithoutRequest
     {
         Get("/users/all");
         AllowAnonymous();
-        Summary(s => {
+        Summary(s =>
+        {
             s.Summary = "Get all users";
         });
     }

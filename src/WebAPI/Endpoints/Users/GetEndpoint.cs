@@ -1,7 +1,5 @@
-﻿using FastEndpoints;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using UnicornValley.Domain.Common;
-using UnicornValley.Infrastructure;
 
 namespace UnicornValley.WebAPI.Endpoints.Users;
 
@@ -18,7 +16,8 @@ public class GetEndpoint : EndpointWithoutRequest
     {
         Get("/users/{UserId}");
         AllowAnonymous();
-        Summary(s => {
+        Summary(s =>
+        {
             s.Summary = "Get a single user";
         });
     }
@@ -33,8 +32,7 @@ public class GetEndpoint : EndpointWithoutRequest
 
         if (user is null)
         {
-            AddError(DomainErrors.Common.NotFoundById.Message, DomainErrors.Common.NotFoundById.Code);
-            ThrowIfAnyErrors();
+            this.HandleError(DomainErrors.Common.NotFoundById);
             return;
         }
 

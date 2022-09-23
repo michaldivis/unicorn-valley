@@ -1,7 +1,4 @@
-﻿using FastEndpoints;
-using MediatR;
-using UnicornValley.Application.Invitations.Send;
-using UnicornValley.Application.Meetings.Create;
+﻿using UnicornValley.Application.Invitations.Send;
 
 namespace UnicornValley.WebAPI.Endpoints.Invitations;
 public class SendEndpoint : Endpoint<SendInvitationCommand>
@@ -17,7 +14,8 @@ public class SendEndpoint : Endpoint<SendInvitationCommand>
     {
         Post("/invitations/send");
         AllowAnonymous();
-        Summary(s => {
+        Summary(s =>
+        {
             s.Summary = "Send a meeting invitation to a specific user";
         });
     }
@@ -32,6 +30,6 @@ public class SendEndpoint : Endpoint<SendInvitationCommand>
             return;
         }
 
-        EndpointUtils.HandleErrorResult(result, ThrowIfAnyErrors, AddError);
+        this.HandleErrors(result);
     }
 }

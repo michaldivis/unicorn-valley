@@ -1,5 +1,4 @@
 ﻿using FluentResults;
-using Microsoft.AspNetCore.Mvc.Formatters.Xml;
 using UnicornValley.Domain.Abstractions;
 using UnicornValley.Domain.Common;
 
@@ -31,7 +30,7 @@ public class ErrorHandler : IErrorHandler
 
     private void LogError(IError error)
     {
-        if(error is DomainError domainError)
+        if (error is DomainError domainError)
         {
             _logger.LogWarning("Domain error occured with code: {@Code} and message: {@Message}", domainError.Code, domainError.Message);
             return;

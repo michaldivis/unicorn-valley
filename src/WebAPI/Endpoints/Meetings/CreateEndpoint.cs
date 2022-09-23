@@ -1,6 +1,4 @@
-﻿using FastEndpoints;
-using MediatR;
-using UnicornValley.Application.Meetings.Create;
+﻿using UnicornValley.Application.Meetings.Create;
 
 namespace UnicornValley.WebAPI.Endpoints.Meetings;
 public class CreateEndpoint : Endpoint<CreateMeetingCommand>
@@ -16,7 +14,8 @@ public class CreateEndpoint : Endpoint<CreateMeetingCommand>
     {
         Post("/meetings/create");
         AllowAnonymous();
-        Summary(s => {
+        Summary(s =>
+        {
             s.Summary = "Create a meeting";
             s.ExampleRequest = new CreateMeetingCommand
             {
@@ -40,6 +39,6 @@ public class CreateEndpoint : Endpoint<CreateMeetingCommand>
             return;
         }
 
-        EndpointUtils.HandleErrorResult(result, ThrowIfAnyErrors, AddError);
+        this.HandleErrors(result);
     }
 }

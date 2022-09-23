@@ -1,9 +1,7 @@
 ﻿using Bogus;
-using FastEndpoints;
 using UnicornValley.Domain.Entities;
 using UnicornValley.Domain.Enums;
 using UnicornValley.Domain.ValueObjects;
-using UnicornValley.Infrastructure;
 
 namespace UnicornValley.WebAPI.SeedData;
 

@@ -1,15 +1,12 @@
-using FastEndpoints;
-using MediatR;
-using Serilog.Events;
+using FastEndpoints.Swagger;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
+using Serilog.Events;
 using UnicornValley.Domain.Abstractions;
 using UnicornValley.Domain.Repositories;
-using UnicornValley.Infrastructure;
 using UnicornValley.Infrastructure.Repositories;
-using UnicornValley.WebAPI.Services;
-using Microsoft.EntityFrameworkCore;
 using UnicornValley.WebAPI.SeedData;
-using FastEndpoints.Swagger;
+using UnicornValley.WebAPI.Services;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -45,7 +42,7 @@ try
     builder.Services.AddFastEndpoints();
     builder.Services.AddSwaggerDoc();
 
-    var app = builder.Build();    
+    var app = builder.Build();
 
     app.UseHttpsRedirection();
     app.UseFastEndpoints();

@@ -1,7 +1,4 @@
-﻿using FastEndpoints;
-using MediatR;
-using UnicornValley.Application.Invitations.Accept;
-using UnicornValley.Application.Invitations.Send;
+﻿using UnicornValley.Application.Invitations.Accept;
 
 namespace UnicornValley.WebAPI.Endpoints.Invitations;
 
@@ -18,7 +15,8 @@ public class AcceptEndpoint : Endpoint<AcceptInvitationCommand>
     {
         Post("/invitations/accept");
         AllowAnonymous();
-        Summary(s => {
+        Summary(s =>
+        {
             s.Summary = "Accept a meeting invitation";
         });
     }
@@ -33,6 +31,6 @@ public class AcceptEndpoint : Endpoint<AcceptInvitationCommand>
             return;
         }
 
-        EndpointUtils.HandleErrorResult(result, ThrowIfAnyErrors, AddError);
+        this.HandleErrors(result);
     }
 }
