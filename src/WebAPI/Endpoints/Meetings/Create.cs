@@ -1,11 +1,11 @@
 ﻿using UnicornValley.Application.Meetings.Create;
 
 namespace UnicornValley.WebAPI.Endpoints.Meetings;
-public class CreateEndpoint : Endpoint<CreateMeetingCommand>
+public class Create : Endpoint<CreateMeetingCommand>
 {
     private readonly IMediator _mediator;
 
-    public CreateEndpoint(IMediator mediator)
+    public Create(IMediator mediator)
     {
         _mediator = mediator;
     }

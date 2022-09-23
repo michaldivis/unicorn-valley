@@ -1,11 +1,11 @@
 ﻿using UnicornValley.Application.Invitations.Send;
 
 namespace UnicornValley.WebAPI.Endpoints.Invitations;
-public class SendEndpoint : Endpoint<SendInvitationCommand>
+public class Send : Endpoint<SendInvitationCommand>
 {
     private readonly IMediator _mediator;
 
-    public SendEndpoint(IMediator mediator)
+    public Send(IMediator mediator)
     {
         _mediator = mediator;
     }

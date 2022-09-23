@@ -2,11 +2,11 @@
 
 namespace UnicornValley.WebAPI.Endpoints.Invitations;
 
-public class AcceptEndpoint : Endpoint<AcceptInvitationCommand>
+public class Accept : Endpoint<AcceptInvitationCommand>
 {
     private readonly IMediator _mediator;
 
-    public AcceptEndpoint(IMediator mediator)
+    public Accept(IMediator mediator)
     {
         _mediator = mediator;
     }

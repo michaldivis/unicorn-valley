@@ -2,11 +2,11 @@
 
 namespace UnicornValley.WebAPI.Endpoints.Users;
 
-public class GetAllEndpoint : EndpointWithoutRequest
+public class GetAll : EndpointWithoutRequest
 {
     private readonly AppDbContext _db;
 
-    public GetAllEndpoint(AppDbContext db)
+    public GetAll(AppDbContext db)
     {
         _db = db;
     }
@@ -23,8 +23,6 @@ public class GetAllEndpoint : EndpointWithoutRequest
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        //TODO paginate get all users
-
         var users = await _db.Users
             .AsNoTracking()
             .ToListAsync(ct);

@@ -3,11 +3,11 @@ using UnicornValley.Domain.Common;
 
 namespace UnicornValley.WebAPI.Endpoints.Users;
 
-public class GetEndpoint : EndpointWithoutRequest
+public class Get : EndpointWithoutRequest
 {
     private readonly AppDbContext _db;
 
-    public GetEndpoint(AppDbContext db)
+    public Get(AppDbContext db)
     {
         _db = db;
     }
