@@ -22,7 +22,10 @@ try
 
     //configure logging
     builder.Logging.ClearProviders();
-    builder.Logging.AddSerilog();
+    var logger = new LoggerConfiguration()
+        .ReadFrom.Configuration(builder.Configuration)
+        .CreateLogger();
+    builder.Logging.AddSerilog(logger);
 
     //TODO configure DB context
     builder.Services.AddDbContext<AppDbContext>(o => o.UseInMemoryDatabase("InMemoryDb"));
