@@ -1,4 +1,4 @@
-﻿namespace UnicornValley.Application.Invitations.Accept;
+﻿namespace UnicornValley.Application.Invitations.Notifications;
 public class InvitationAcceptedNotificationHandler : INotificationHandler<InvitationAccepted>
 {
     private readonly IEmailService _emailService;

@@ -1,6 +1,6 @@
 ﻿using UnicornValley.Domain.Errors;
 
-namespace UnicornValley.Application.Users.Create;
+namespace UnicornValley.Application.Users.Commands;
 
 public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Result<User>>
 {

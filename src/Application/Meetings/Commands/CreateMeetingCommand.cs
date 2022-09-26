@@ -1,4 +1,4 @@
-﻿namespace UnicornValley.Application.Meetings.Create;
+﻿namespace UnicornValley.Application.Meetings.Commands;
 public record CreateMeetingCommand : IRequest<Result<Meeting>>
 {
     public Guid CreatorId { get; init; }

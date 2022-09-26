@@ -1,7 +1,4 @@
-﻿using UnicornValley.Domain.Entities;
-using UnicornValley.Domain.Repositories;
-
-namespace UnicornValley.Infrastructure.Repositories;
+﻿namespace UnicornValley.Infrastructure.Repositories;
 
 public class AttendeeRepository : GenericRepository<Attendee>, IAttendeeRepository
 {

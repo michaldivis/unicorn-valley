@@ -1,4 +1,4 @@
-﻿namespace UnicornValley.Application.Meetings.Create;
+﻿namespace UnicornValley.Application.Meetings.Commands;
 public class CreateMeetingCommandHandler : IRequestHandler<CreateMeetingCommand, Result<Meeting>>
 {
     private readonly IUserRepository _userRepository;
@@ -18,7 +18,7 @@ public class CreateMeetingCommandHandler : IRequestHandler<CreateMeetingCommand,
     {
         var userResult = await _userRepository.FindByIdAsync(request.CreatorId, cancellationToken);
 
-        if(userResult.IsFailed)
+        if (userResult.IsFailed)
         {
             await _errorHandler.HandleAsync(userResult, cancellationToken);
             return userResult.ToResult<Meeting>();

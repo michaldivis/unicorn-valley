@@ -1,4 +1,4 @@
-﻿namespace UnicornValley.Application.Invitations.Send;
+﻿namespace UnicornValley.Application.Invitations.Commands;
 
 public class SendInvitationCommandHandler : IRequestHandler<SendInvitationCommand, Result<Invitation>>
 {

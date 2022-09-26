@@ -1,16 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
-using UnicornValley.Domain.Entities;
-using UnicornValley.Domain.Errors;
+﻿using UnicornValley.Application.Users.Queries;
 
 namespace UnicornValley.WebAPI.Endpoints.Users;
 
 public class Get : EndpointWithoutRequest
 {
-    private readonly AppDbContext _db;
+    private readonly IMediator _mediator;
 
-    public Get(AppDbContext db)
+    public Get(IMediator mediator)
     {
-        _db = db;
+        _mediator = mediator;
     }
 
     public override void Configure()
@@ -24,17 +22,14 @@ public class Get : EndpointWithoutRequest
     {
         var userId = Route<Guid>("UserId");
 
-        var user = await _db.Users
-            .AsNoTracking()
-            .FirstOrDefaultAsync(a => a.Id == userId, ct);
+        var result = await _mediator.Send(new GetUserByIdQuery { UserId = userId }, ct);
 
-        if (user is null)
+        if (result.IsFailed)
         {
-            var error = DomainErrors.Common.NotFoundById(typeof(User), userId);
-            await EndpointUtils.SendDomainErrorsAsync(this, error, SendAsync, cancellationToken: ct);
+            await EndpointUtils.SendDomainErrorsAsync(this, result, SendAsync, cancellationToken: ct);
             return;
         }
 
-        await SendAsync(user, cancellation: ct);
+        await SendAsync(result.Value, cancellation: ct);
     }
 }

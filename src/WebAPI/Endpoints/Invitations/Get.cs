@@ -1,16 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
-using UnicornValley.Domain.Entities;
-using UnicornValley.Domain.Errors;
+﻿using UnicornValley.Application.Invitations.Queries;
 
 namespace UnicornValley.WebAPI.Endpoints.Invitations;
 
 public class Get : EndpointWithoutRequest
 {
-    private readonly AppDbContext _db;
+    private readonly IMediator _mediator;
 
-    public Get(AppDbContext db)
+    public Get(IMediator mediator)
     {
-        _db = db;
+        _mediator = mediator;
     }
 
     public override void Configure()
@@ -24,18 +22,14 @@ public class Get : EndpointWithoutRequest
     {
         var invitationId = Route<Guid>("InvitationId");
 
-        var invitation = await _db.Invitations
-            .AsNoTracking()
-            .IncludeAll()
-            .FirstOrDefaultAsync(a => a.Id == invitationId, ct);
+        var result = await _mediator.Send(new GetInvitationByIdQuery { InvitationId = invitationId }, ct);
 
-        if (invitation is null)
+        if (result.IsFailed)
         {
-            var error = DomainErrors.Common.NotFoundById(typeof(Invitation), invitationId);
-            await EndpointUtils.SendDomainErrorsAsync(this, error, SendAsync, cancellationToken: ct);
+            await EndpointUtils.SendDomainErrorsAsync(this, result, SendAsync, cancellationToken: ct);
             return;
         }
 
-        await SendAsync(invitation, cancellation: ct);
+        await SendAsync(result.Value, cancellation: ct);
     }
 }

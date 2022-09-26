@@ -1,4 +1,4 @@
-﻿using UnicornValley.Application.Invitations.Accept;
+﻿using UnicornValley.Application.Invitations.Commands;
 
 namespace UnicornValley.WebAPI.Endpoints.Invitations;
 

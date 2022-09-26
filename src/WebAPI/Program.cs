@@ -41,6 +41,11 @@ try
     builder.Services.AddScoped<IInvitationRepository, InvitationRepository>();
     builder.Services.AddScoped<IAttendeeRepository, AttendeeRepository>();
 
+    builder.Services.AddScoped<IReadOnlyUserRepository, ReadOnlyUserRepository>();
+    builder.Services.AddScoped<IReadOnlyMeetingRepository, ReadOnlyMeetingRepository>();
+    builder.Services.AddScoped<IReadOnlyInvitationRepository, ReadOnlyInvitationRepository>();
+    builder.Services.AddScoped<IReadOnlyAttendeeRepository, ReadOnlyAttendeeRepository>();
+
     builder.Services.AddMediatR(typeof(UnicornValley.Application.AssemblyMarker));
     builder.Services.AddFastEndpoints();
     builder.Services.AddSwaggerDoc();
