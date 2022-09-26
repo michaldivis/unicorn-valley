@@ -33,7 +33,9 @@ public class SendInvitationCommandHandler : IRequestHandler<SendInvitationComman
             return meetingResult.ToResult<Invitation>();
         }
 
-        var invitationResult = meetingResult.Value.SendInvitation(userResult.Value);
+        var existingInvitation = await _invitationRepository.GetForUserAndMeeting(request.UserId, request.MeetingId);
+
+        var invitationResult = meetingResult.Value.SendInvitation(userResult.Value, existingInvitation);
         if (invitationResult.IsFailed)
         {
             await _errorHandler.HandleAsync(invitationResult, cancellationToken);

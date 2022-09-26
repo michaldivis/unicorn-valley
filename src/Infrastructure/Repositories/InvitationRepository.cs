@@ -1,5 +1,4 @@
-﻿using UnicornValley.Domain.Entities;
-using UnicornValley.Domain.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace UnicornValley.Infrastructure.Repositories;
 
@@ -11,4 +10,12 @@ public class InvitationRepository : GenericRepository<Invitation>, IInvitationRe
 
     private string[]? _includeProperties;
     protected override string[] IncludeProperties => _includeProperties ??= Array.Empty<string>();
+
+    public async Task<Invitation?> GetForUserAndMeeting(Guid userId, Guid meetingId)
+    {
+        return await _dbSet
+            .IncludeAll()
+            .Where(a => a.UserId == userId && a.MeetingId == meetingId)
+            .FirstOrDefaultAsync();
+    }
 }

@@ -77,7 +77,7 @@ public class Meeting : AggregateRoot
         return Result.Ok();
     }
 
-    public Result<Invitation> SendInvitation(User user)
+    public Result<Invitation> SendInvitation(User user, Invitation? existingInvitation)
     {
         if(user.Id == Creator.Id)
         {
@@ -87,6 +87,22 @@ public class Meeting : AggregateRoot
         if(ScheduledAtUtc < DateTime.UtcNow)
         {
             return Result.Fail(DomainErrors.Meeting.AlreadyPassed);
+        }
+
+        if (existingInvitation is not null)
+        {
+            var canInviteAgain = existingInvitation.Status switch
+            {
+                InvitationStatus.Pending => false,
+                InvitationStatus.Expired => true,
+                InvitationStatus.Accepted => false,
+                _ => throw ExhaustiveMatch.Failed(existingInvitation.Status)
+            };
+
+            if (!canInviteAgain)
+            {
+                return Result.Fail(DomainErrors.Meeting.InvitationAlreadyExists);
+            }
         }
 
         var invitation = new Invitation(Guid.NewGuid(), user, this);
