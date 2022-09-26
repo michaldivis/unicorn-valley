@@ -7,22 +7,17 @@ namespace UnicornValley.WebAPI.Endpoints.Invitations;
 public class Get : EndpointWithoutRequest
 {
     private readonly AppDbContext _db;
-    private readonly ILogger<Get> _logger;
 
-    public Get(AppDbContext db, ILogger<Get> logger)
+    public Get(AppDbContext db)
     {
         _db = db;
-        _logger = logger;
     }
 
     public override void Configure()
     {
         Get("/invitations/{InvitationId}");
         AllowAnonymous();
-        Summary(s =>
-        {
-            s.Summary = "Get a single invitation";
-        });
+        Summary(s => s.Summary = "Get a single invitation");
     }
 
     public override async Task HandleAsync(CancellationToken ct)
@@ -36,7 +31,8 @@ public class Get : EndpointWithoutRequest
 
         if (invitation is null)
         {
-            this.HandleError(_logger, DomainErrors.Common.NotFoundById<Invitation>(invitationId));
+            var error = DomainErrors.Common.NotFoundById<Invitation>(invitationId);
+            await EndpointUtils.SendDomainErrorsAsync(this, error, SendAsync, cancellationToken: ct);
             return;
         }
 

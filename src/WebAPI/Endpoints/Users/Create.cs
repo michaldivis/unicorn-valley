@@ -4,12 +4,10 @@ namespace UnicornValley.WebAPI.Endpoints.Users;
 public class Create : Endpoint<CreateUserCommand>
 {
     private readonly IMediator _mediator;
-    private readonly ILogger<Create> _logger;
 
-    public Create(IMediator mediator, ILogger<Create> logger)
+    public Create(IMediator mediator)
     {
         _mediator = mediator;
-        _logger = logger;
     }
 
     public override void Configure()
@@ -30,12 +28,12 @@ public class Create : Endpoint<CreateUserCommand>
     {
         var result = await _mediator.Send(req, ct);
 
-        if (result.IsSuccess)
+        if (result.IsFailed)
         {
-            await SendAsync(result.Value, cancellation: ct);
+            await EndpointUtils.SendDomainErrorsAsync(this, result, SendAsync, cancellationToken: ct);
             return;
         }
 
-        this.HandleErrors(_logger, result);
+        await SendAsync(result.Value, cancellation: ct);
     }
 }

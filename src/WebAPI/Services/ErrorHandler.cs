@@ -1,5 +1,6 @@
 ﻿using FluentResults;
 using UnicornValley.Domain.Abstractions;
+using UnicornValley.Domain.Common;
 
 namespace UnicornValley.WebAPI.Services;
 
@@ -29,6 +30,13 @@ public class ErrorHandler : IErrorHandler
 
     private void LogError(IError error)
     {
-        _logger.LogError("An error occured: {@Error}", error); //TODO log errors better
+        if(error is DomainError domainError)
+        {
+            _logger.LogError(domainError.Message, domainError.Args);
+        }
+        else
+        {
+            _logger.LogError("An unknown error occured: {@Error}", error); //TODO unknown log errors better
+        }        
     }
 }

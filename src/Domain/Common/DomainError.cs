@@ -1,19 +1,19 @@
 ﻿namespace UnicornValley.Domain.Common;
-public class DomainError : IError
+public record DomainError : IError
 {
     public string Code { get; }
     public string Title { get; }
     public string Message { get; }
-    public Dictionary<string, object> Metadata { get; }
-    public List<IError> Reasons { get; }
+    public object?[] Args { get; }
+    public Dictionary<string, object> Metadata { get; } = new();
+    public List<IError> Reasons { get; } = new();
 
-    public DomainError(string code, string title, string message)
+    internal DomainError(string code, string title, string message, params object?[] args)
     {
         Code = code;
         Title = title;
         Message = message;
-        Metadata = new Dictionary<string, object>();
-        Reasons = new List<IError>();
+        Args = args;
     }
 
     /// <summary>
@@ -23,17 +23,5 @@ public class DomainError : IError
     {
         Metadata.Add(metadataName, metadataValue);
         return this;
-    }
-
-    public override string ToString()
-    {
-        return new ReasonStringBuilder()
-            .WithReasonType(GetType())
-            .WithInfo(nameof(Code), Code)
-            .WithInfo(nameof(Title), Title)
-            .WithInfo(nameof(Message), Message)
-            .WithInfo(nameof(Metadata), string.Join("; ", Metadata))
-            .WithInfo(nameof(Reasons), string.Join("; ", Reasons))
-            .Build();
     }
 }

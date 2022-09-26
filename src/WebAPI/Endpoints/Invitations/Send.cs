@@ -4,34 +4,29 @@ namespace UnicornValley.WebAPI.Endpoints.Invitations;
 public class Send : Endpoint<SendInvitationCommand>
 {
     private readonly IMediator _mediator;
-    private readonly ILogger<Send> _logger;
 
-    public Send(IMediator mediator, ILogger<Send> logger)
+    public Send(IMediator mediator)
     {
         _mediator = mediator;
-        _logger = logger;
     }
 
     public override void Configure()
     {
         Post("/invitations/send");
         AllowAnonymous();
-        Summary(s =>
-        {
-            s.Summary = "Send a meeting invitation to a specific user";
-        });
+        Summary(s => s.Summary = "Send a meeting invitation to a specific user");
     }
 
     public override async Task HandleAsync(SendInvitationCommand req, CancellationToken ct)
     {
         var result = await _mediator.Send(req, ct);
 
-        if (result.IsSuccess)
+        if (result.IsFailed)
         {
-            await SendAsync(result.Value, cancellation: ct);
+            await EndpointUtils.SendDomainErrorsAsync(this, result, SendAsync, cancellationToken: ct);
             return;
         }
 
-        this.HandleErrors(_logger, result);
+        await SendAsync(result.Value, cancellation: ct);
     }
 }

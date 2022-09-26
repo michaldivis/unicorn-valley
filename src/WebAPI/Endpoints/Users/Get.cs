@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Net;
+﻿using Microsoft.EntityFrameworkCore;
 using UnicornValley.Domain.Common;
 using UnicornValley.Domain.Entities;
 
@@ -33,33 +31,10 @@ public class Get : EndpointWithoutRequest
         if (user is null)
         {
             var error = DomainErrors.Common.NotFoundById<User>(userId);
-
-            var errorResponse = CreateProblemDetails(this, error);
-
-            await SendAsync(errorResponse, (int)HttpStatusCode.BadRequest, ct);
-
+            await EndpointUtils.SendDomainErrorsAsync(this, error, SendAsync, cancellationToken: ct);
             return;
         }
 
         await SendAsync(user, cancellation: ct);
-    }
-
-    public static ProblemDetails CreateProblemDetails(IEndpoint endpoint, DomainError error, HttpStatusCode httpStatusCode = HttpStatusCode.BadRequest)
-    {
-        var problemDetails = new ProblemDetails
-        {
-            Type = $"/errors/{error.Code.Replace('.', '-').ToLower()}",
-            Title = error.Title,
-            Detail = error.Message,
-            Instance = endpoint.HttpContext.Request.Path,
-            Status = (int)httpStatusCode
-        };
-
-        foreach (var item in error.Metadata)
-        {
-            problemDetails.Extensions.Add(item);
-        }
-
-        return problemDetails;
     }
 }
