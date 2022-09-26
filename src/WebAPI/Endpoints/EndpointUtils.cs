@@ -1,5 +1,4 @@
 ﻿using FluentResults;
-using FluentValidation.Internal;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using UnicornValley.Domain.Errors;
@@ -17,8 +16,9 @@ public static class EndpointUtils
         HttpStatusCode httpStatusCode = HttpStatusCode.BadRequest,
         CancellationToken cancellationToken = default)
     {
-        //TODO handle mulitple errors
-        var errorResponse = CreateProblemDetails(endpoint, result.Errors.First(), httpStatusCode);
+        var errorResponse = result.Errors.Count > 1
+            ? CreateMultipleProblemDetails(endpoint, result.Errors, httpStatusCode)
+            : CreateProblemDetails(endpoint, result.Errors.First(), httpStatusCode);
         await sendAsyncDelegate(errorResponse, (int)httpStatusCode, cancellationToken);
     }
 
@@ -33,13 +33,13 @@ public static class EndpointUtils
         await sendAsyncDelegate(errorResponse, (int)httpStatusCode, cancellationToken);
     }
 
-    private static ProblemDetails CreateProblemDetails(IEndpoint endpoint, IError error, HttpStatusCode httpStatusCode)
+    private static ProblemDetails CreateProblemDetails(IEndpoint endpoint, IError error, HttpStatusCode? httpStatusCode)
     {
         var problemDetails = new ProblemDetails
         {
             Detail = error.Message,
             Instance = endpoint.HttpContext.Request.Path,
-            Status = (int)httpStatusCode
+            Status = (int?)httpStatusCode
         };
 
         if (error is DomainError domainError)
@@ -52,11 +52,27 @@ public static class EndpointUtils
             problemDetails.Type = "/errors/unknown";
         }
 
-        foreach (var item in error.Metadata)
+        if (error.Metadata.Any())
         {
-            problemDetails.Extensions.Add(item);
+            problemDetails.Extensions.Add("metadata", error.Metadata);
         }
 
         return problemDetails;
+    }
+
+    private static ProblemDetails CreateMultipleProblemDetails(IEndpoint endpoint, IEnumerable<IError> errors, HttpStatusCode httpStatusCode)
+    {
+        var multipleProblemDetails = new ProblemDetails
+        {
+            Type = "/errors/multiple",
+            Detail = "There were multiple problems that have occurred",
+            Instance = endpoint.HttpContext.Request.Path,
+            Status = (int)httpStatusCode
+        };
+
+        var problems = errors.Select(a => CreateProblemDetails(endpoint, a, null));
+        multipleProblemDetails.Extensions.Add("problems", problems);
+
+        return multipleProblemDetails;
     }
 }

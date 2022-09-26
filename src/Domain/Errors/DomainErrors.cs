@@ -9,7 +9,7 @@ public static class DomainErrors
             .WithTitle("Entity not found by ID")
             .WithMessage("{0} with ID: {1} not found", entityType.Name, id)
             .WithMetadata("EntityType", entityType.Name)
-            .WithMetadata("UserId", id)
+            .WithMetadata("Id", id)
             .Create();
     }
 
