@@ -41,7 +41,7 @@ try
     builder.Services.AddScoped<IInvitationRepository, InvitationRepository>();
     builder.Services.AddScoped<IAttendeeRepository, AttendeeRepository>();
 
-    builder.Services.AddMediatR(typeof(UnicornValley.Application.Marker));
+    builder.Services.AddMediatR(typeof(UnicornValley.Application.AssemblyMarker));
     builder.Services.AddFastEndpoints();
     builder.Services.AddSwaggerDoc();
 

@@ -1,4 +1,4 @@
 ﻿namespace UnicornValley.Application;
-public sealed class Marker
+public sealed class AssemblyMarker
 {
 }
