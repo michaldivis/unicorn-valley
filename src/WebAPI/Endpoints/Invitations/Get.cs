@@ -31,7 +31,7 @@ public class Get : EndpointWithoutRequest
 
         if (invitation is null)
         {
-            var error = DomainErrors.Common.NotFoundById<Invitation>(invitationId);
+            var error = DomainErrors.Common.NotFoundById(typeof(Invitation), invitationId);
             await EndpointUtils.SendDomainErrorsAsync(this, error, SendAsync, cancellationToken: ct);
             return;
         }

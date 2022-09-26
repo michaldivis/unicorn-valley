@@ -30,7 +30,7 @@ public class Get : EndpointWithoutRequest
 
         if (user is null)
         {
-            var error = DomainErrors.Common.NotFoundById<User>(userId);
+            var error = DomainErrors.Common.NotFoundById(typeof(User), userId);
             await EndpointUtils.SendDomainErrorsAsync(this, error, SendAsync, cancellationToken: ct);
             return;
         }

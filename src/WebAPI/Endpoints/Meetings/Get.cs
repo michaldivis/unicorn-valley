@@ -31,7 +31,7 @@ public class Get : EndpointWithoutRequest
 
         if (meeting is null)
         {
-            var error = DomainErrors.Common.NotFoundById<Meeting>(meetingId);
+            var error = DomainErrors.Common.NotFoundById(typeof(Meeting), meetingId);
             await EndpointUtils.SendDomainErrorsAsync(this, error, SendAsync, cancellationToken: ct);
             return;
         }

@@ -4,11 +4,11 @@ public static class DomainErrors
 {
     public static class Common
     {
-        public static DomainError NotFoundById<TEntity>(Guid id) where TEntity : Entity => new DomainErrorBuilder()
+        public static DomainError NotFoundById(Type entityType, Guid id) => new DomainErrorBuilder()
             .WithCode("common-not-found-by-id")
             .WithTitle("Entity not found by ID")
-            .WithMessage("{0} with ID: {1} not found", typeof(TEntity).Name, id)
-            .WithMetadata("EntityType", typeof(TEntity).Name)
+            .WithMessage("{0} with ID: {1} not found", entityType.Name, id)
+            .WithMetadata("EntityType", entityType.Name)
             .WithMetadata("UserId", id)
             .Create();
     }
