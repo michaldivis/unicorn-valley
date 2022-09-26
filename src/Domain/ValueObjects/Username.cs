@@ -1,8 +1,10 @@
 ﻿using System.Net.Mail;
+using System.Text.Json.Serialization;
 using ValueOf;
 
 namespace UnicornValley.Domain.ValueObjects;
 
+[JsonConverter(typeof(UsernameJsonConverter))]
 public class Username : ValueOf<string, Username>
 {
     protected override void Validate()
