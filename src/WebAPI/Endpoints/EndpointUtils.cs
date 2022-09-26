@@ -1,7 +1,8 @@
 ﻿using FluentResults;
+using FluentValidation.Internal;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using UnicornValley.Domain.Common;
+using UnicornValley.Domain.Errors;
 
 namespace UnicornValley.WebAPI.Endpoints;
 
@@ -36,27 +37,19 @@ public static class EndpointUtils
     {
         var problemDetails = new ProblemDetails
         {
+            Detail = error.Message,
             Instance = endpoint.HttpContext.Request.Path,
             Status = (int)httpStatusCode
         };
 
         if (error is DomainError domainError)
         {
-            problemDetails = new ProblemDetails
-            {
-                Type = $"/errors/{domainError.Code.Replace('.', '-').ToLower()}",
-                Title = domainError.Title,
-                Detail = domainError.Message
-            };
-
-            problemDetails.Type = $"/errors/{domainError.Code.Replace('.', '-').ToLower()}";
+            problemDetails.Type = $"/errors/{domainError.Code}";
             problemDetails.Title = domainError.Title;
-            problemDetails.Detail = string.Format(domainError.Message, domainError.Args);
         }
         else
         {
             problemDetails.Type = "/errors/unknown";
-            problemDetails.Detail = error.Message;
         }
 
         foreach (var item in error.Metadata)

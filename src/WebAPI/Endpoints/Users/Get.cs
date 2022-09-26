@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using UnicornValley.Domain.Common;
 using UnicornValley.Domain.Entities;
+using UnicornValley.Domain.Errors;
 
 namespace UnicornValley.WebAPI.Endpoints.Users;
 

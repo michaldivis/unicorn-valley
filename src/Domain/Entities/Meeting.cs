@@ -1,4 +1,6 @@
-﻿namespace UnicornValley.Domain.Entities;
+﻿using UnicornValley.Domain.Errors;
+
+namespace UnicornValley.Domain.Entities;
 
 public class Meeting : AggregateRoot
 {

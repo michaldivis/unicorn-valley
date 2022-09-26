@@ -1,6 +1,6 @@
 ﻿using FluentResults;
 using UnicornValley.Domain.Abstractions;
-using UnicornValley.Domain.Common;
+using UnicornValley.Domain.Errors;
 
 namespace UnicornValley.WebAPI.Services;
 
