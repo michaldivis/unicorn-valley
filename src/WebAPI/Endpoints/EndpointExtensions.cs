@@ -7,13 +7,14 @@ namespace UnicornValley.WebAPI.Endpoints;
 
 public static class EndpointExtensions
 {
-    public static void HandleError(this IEndpoint endpoint, DomainError domainError)
+    public static void HandleError(this IEndpoint endpoint, ILogger logger, IError error)
     {
-        AddError(endpoint, domainError);
+        AddError(endpoint, error);
+        LogError(logger, error);
         throw new ValidationFailureException(endpoint.ValidationFailures, $"{nameof(HandleError)}() called");
     }
 
-    public static void HandleErrors(this IEndpoint endpoint, IResultBase result)
+    public static void HandleErrors(this IEndpoint endpoint, ILogger logger, IResultBase result)
     {
         if (result.IsSuccess)
         {
@@ -23,6 +24,7 @@ public static class EndpointExtensions
         foreach (var error in result.Errors)
         {
             AddError(endpoint, error);
+            LogError(logger, error);
         }
 
         throw new ValidationFailureException(endpoint.ValidationFailures, $"{nameof(HandleErrors)}() called");
@@ -30,19 +32,15 @@ public static class EndpointExtensions
 
     private static void AddError(IEndpoint endpoint, IError error)
     {
-        if (error is DomainError domainError)
-        {
-            endpoint.ValidationFailures.Add(new ValidationFailure("GeneralErrors", domainError.Message)
-            {
-                ErrorCode = domainError.Code,
-                Severity = Severity.Error
-            });
-            return;
-        }
-
-        endpoint.ValidationFailures.Add(new ValidationFailure("GeneralErrors", error.Message)
+        endpoint.ValidationFailures.Add(new ValidationFailure("GeneralErrors", error.ToString())
         {
             Severity = Severity.Error
         });
+    }
+
+    private static void LogError(ILogger logger, IError error)
+    {
+        //TODO log an IError using ILogger
+        logger.LogError(error.ToString());
     }
 }

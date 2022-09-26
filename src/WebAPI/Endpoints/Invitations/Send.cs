@@ -4,10 +4,12 @@ namespace UnicornValley.WebAPI.Endpoints.Invitations;
 public class Send : Endpoint<SendInvitationCommand>
 {
     private readonly IMediator _mediator;
+    private readonly ILogger<Send> _logger;
 
-    public Send(IMediator mediator)
+    public Send(IMediator mediator, ILogger<Send> logger)
     {
         _mediator = mediator;
+        _logger = logger;
     }
 
     public override void Configure()
@@ -30,6 +32,6 @@ public class Send : Endpoint<SendInvitationCommand>
             return;
         }
 
-        this.HandleErrors(result);
+        this.HandleErrors(_logger, result);
     }
 }

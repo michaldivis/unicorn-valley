@@ -18,7 +18,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Resul
         var isUsernameValid = Username.TryFrom(request.Username, out var username);
         if (!isUsernameValid)
         {
-            return Result.Fail(DomainErrors.User.InvalidUsername);
+            return Result.Fail(DomainErrors.User.InvalidUsername(request.Username));
         }
 
         var isUsernameUnique = await _userRepository.IsUsernameUniqueAsync(username);

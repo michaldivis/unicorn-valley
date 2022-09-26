@@ -26,7 +26,7 @@ public abstract class GenericRepository<TEntity> : IRepository<TEntity> where TE
 
         if(result is null)
         {
-            return Result.Fail(DomainErrors.Common.NotFoundById);
+            return Result.Fail(DomainErrors.Common.NotFoundById<TEntity>(id));
         }
 
         return result;

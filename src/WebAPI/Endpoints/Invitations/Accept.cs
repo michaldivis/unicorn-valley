@@ -5,10 +5,12 @@ namespace UnicornValley.WebAPI.Endpoints.Invitations;
 public class Accept : Endpoint<AcceptInvitationCommand>
 {
     private readonly IMediator _mediator;
+    private readonly ILogger<Accept> _logger;
 
-    public Accept(IMediator mediator)
+    public Accept(IMediator mediator, ILogger<Accept> logger)
     {
         _mediator = mediator;
+        _logger = logger;
     }
 
     public override void Configure()
@@ -31,6 +33,6 @@ public class Accept : Endpoint<AcceptInvitationCommand>
             return;
         }
 
-        this.HandleErrors(result);
+        this.HandleErrors(_logger, result);
     }
 }

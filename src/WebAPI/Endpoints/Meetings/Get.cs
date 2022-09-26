@@ -1,15 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using UnicornValley.Domain.Common;
+using UnicornValley.Domain.Entities;
 
 namespace UnicornValley.WebAPI.Endpoints.Meetings;
 
 public class Get : EndpointWithoutRequest
 {
     private readonly AppDbContext _db;
+    private readonly ILogger<Get> _logger;
 
-    public Get(AppDbContext db)
+    public Get(AppDbContext db, ILogger<Get> logger)
     {
         _db = db;
+        _logger = logger;
     }
 
     public override void Configure()
@@ -33,7 +36,7 @@ public class Get : EndpointWithoutRequest
 
         if (meeting is null)
         {
-            this.HandleError(DomainErrors.Common.NotFoundById);
+            this.HandleError(_logger, DomainErrors.Common.NotFoundById<Meeting>(meetingId));
             return;
         }
 

@@ -57,7 +57,7 @@ public class Meeting : AggregateRoot
     {
         if (maximumNumberOfAttendees is null)
         {
-            return Result.Fail(DomainErrors.Meeting.MaximumNumberOfAttendeesMissing);
+            return Result.Fail(DomainErrors.Meeting.MaximumNumberOfAttendeesMissing());
         }
 
         meeting.MaximumNumberOfAttendees = maximumNumberOfAttendees;
@@ -69,7 +69,7 @@ public class Meeting : AggregateRoot
     {
         if (invitationValidBeforeInHours is null)
         {
-            return Result.Fail(DomainErrors.Meeting.InvitationValidBeforeInHoursMissing);
+            return Result.Fail(DomainErrors.Meeting.InvitationValidBeforeInHoursMissing());
         }
 
         meeting.InvitationsExpireAtUtc = scheduledAtUtc.AddHours(-invitationValidBeforeInHours.Value);
@@ -81,12 +81,12 @@ public class Meeting : AggregateRoot
     {
         if(user.Id == Creator.Id)
         {
-            return Result.Fail(DomainErrors.Meeting.InvitingCreator);
+            return Result.Fail(DomainErrors.Meeting.InvitingCreator(Creator.Id));
         }
 
         if(ScheduledAtUtc < DateTime.UtcNow)
         {
-            return Result.Fail(DomainErrors.Meeting.AlreadyPassed);
+            return Result.Fail(DomainErrors.Meeting.AlreadyPassed(ScheduledAtUtc));
         }
 
         if (existingInvitation is not null)
@@ -101,7 +101,7 @@ public class Meeting : AggregateRoot
 
             if (!canInviteAgain)
             {
-                return Result.Fail(DomainErrors.Meeting.InvitationAlreadyExists);
+                return Result.Fail(DomainErrors.Meeting.InvitationAlreadyExists(user.Id, this.Id, existingInvitation.Id));
             }
         }
 
@@ -124,12 +124,12 @@ public class Meeting : AggregateRoot
         if (isExpired)
         {
             invitation.Expire();
-            return Result.Fail(DomainErrors.Meeting.InvitationExpired);
+            return Result.Fail(DomainErrors.Meeting.InvitationExpired(InvitationsExpireAtUtc!.Value));
         }
 
         if(invitation.Status == InvitationStatus.Accepted)
         {
-            return Result.Fail(DomainErrors.Meeting.InvitationAlreadyAccepted);
+            return Result.Fail(DomainErrors.Meeting.InvitationAlreadyAccepted());
         }
 
         var attendee = invitation.Accept();

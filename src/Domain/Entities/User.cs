@@ -20,7 +20,7 @@ public class User : AggregateRoot
     {
         if (!isUsernameUnique)
         {
-            return Result.Fail(DomainErrors.User.UsernameAlreadyExists);
+            return Result.Fail(DomainErrors.User.UsernameAlreadyExists(username.Value));
         }
 
         var user = new User(id, username);

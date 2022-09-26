@@ -4,10 +4,12 @@ namespace UnicornValley.WebAPI.Endpoints.Meetings;
 public class Create : Endpoint<CreateMeetingCommand>
 {
     private readonly IMediator _mediator;
+    private readonly ILogger<Create> _logger;
 
-    public Create(IMediator mediator)
+    public Create(IMediator mediator, ILogger<Create> logger)
     {
         _mediator = mediator;
+        _logger = logger;
     }
 
     public override void Configure()
@@ -39,6 +41,6 @@ public class Create : Endpoint<CreateMeetingCommand>
             return;
         }
 
-        this.HandleErrors(result);
+        this.HandleErrors(_logger, result);
     }
 }
