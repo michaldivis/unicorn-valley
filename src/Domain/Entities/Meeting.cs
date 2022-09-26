@@ -111,6 +111,11 @@ public class Meeting : AggregateRoot
             return Result.Fail(DomainErrors.Meeting.InvitationExpired);
         }
 
+        if(invitation.Status == InvitationStatus.Accepted)
+        {
+            return Result.Fail(DomainErrors.Meeting.InvitationAlreadyAccepted);
+        }
+
         var attendee = invitation.Accept();
 
         _attendees.Add(attendee);
