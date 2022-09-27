@@ -1,4 +1,6 @@
-﻿namespace UnicornValley.Domain.Entities;
+﻿using System.Text.Json.Serialization;
+
+namespace UnicornValley.Domain.Entities;
 
 public class Attendee : Entity
 {
@@ -16,7 +18,7 @@ public class Attendee : Entity
     }
 
     [Obsolete("To be used by EF Core only")]
-    internal Attendee()
+    public Attendee()
     {
     }
 }

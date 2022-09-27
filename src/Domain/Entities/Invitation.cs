@@ -1,4 +1,6 @@
-﻿namespace UnicornValley.Domain.Entities;
+﻿using System.Text.Json.Serialization;
+
+namespace UnicornValley.Domain.Entities;
 
 public class Invitation : Entity
 {
@@ -18,6 +20,11 @@ public class Invitation : Entity
         CreatedAtUtc = DateTime.UtcNow;
     }
 
+    [Obsolete("To be used by EF Core only")]
+    public Invitation()
+    {
+    }
+
     internal void Expire()
     {
         Status = InvitationStatus.Expired;
@@ -32,10 +39,5 @@ public class Invitation : Entity
         var attendee = new Attendee(this);
 
         return attendee;
-    }
-
-    [Obsolete("To be used by EF Core only")]
-    internal Invitation()
-    {
-    }
+    }    
 }

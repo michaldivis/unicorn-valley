@@ -1,4 +1,5 @@
-﻿using UnicornValley.Domain.Errors;
+﻿using System.Text.Json.Serialization;
+using UnicornValley.Domain.Errors;
 
 namespace UnicornValley.Domain.Entities;
 
@@ -32,7 +33,7 @@ public class Meeting : AggregateRoot
     }
 
     [Obsolete("To be used by EF Core only")]
-    internal Meeting()
+    public Meeting()
     {
     }
 

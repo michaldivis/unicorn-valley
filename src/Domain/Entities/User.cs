@@ -14,7 +14,7 @@ public class User : AggregateRoot
     }
 
     [Obsolete("To be used by EF Core only")]
-    internal User()
+    public User()
     {
     }
 
