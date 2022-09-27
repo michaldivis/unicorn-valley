@@ -31,6 +31,7 @@ public abstract class ReadOnlyGenericRepository<TEntity> : IReadOnlyRepository<T
     {
         return _dbSet
             .AsNoTracking()
+            .OrderBy(a => a.Id)
             .ToListAsync();
     }
 }
