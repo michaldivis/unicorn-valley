@@ -3,21 +3,21 @@
 public class GetInvitationByIdQueryHandler : IRequestHandler<GetInvitationByIdQuery, Result<Invitation>>
 {
     private readonly IReadOnlyInvitationRepository _readOnlyInvitationRepository;
-    private readonly IErrorHandler _errorHandler;
+    private readonly IResultHandler _resultHandler;
 
-    public GetInvitationByIdQueryHandler(IReadOnlyInvitationRepository readOnlyInvitationRepository, IErrorHandler errorHandler)
+    public GetInvitationByIdQueryHandler(IReadOnlyInvitationRepository readOnlyInvitationRepository, IResultHandler resultHandler)
     {
         _readOnlyInvitationRepository = readOnlyInvitationRepository;
-        _errorHandler = errorHandler;
+        _resultHandler = resultHandler;
     }
 
     public async Task<Result<Invitation>> Handle(GetInvitationByIdQuery request, CancellationToken cancellationToken)
     {
         var userResult = await _readOnlyInvitationRepository.FindByIdAsync(request.InvitationId, cancellationToken);
+        await _resultHandler.HandleAsync(userResult, cancellationToken);
 
         if (userResult.IsFailed)
         {
-            await _errorHandler.HandleAsync(userResult, cancellationToken);
             return userResult;
         }
 

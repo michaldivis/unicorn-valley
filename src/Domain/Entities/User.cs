@@ -27,6 +27,7 @@ public class User : AggregateRoot
 
         var user = new User(id, username);
 
-        return user;
+        return Result.Ok(user)
+            .WithSuccess(DomainSuccesses.User.Created(user));
     }
 }

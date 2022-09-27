@@ -31,7 +31,7 @@ try
     builder.Services.AddDbContext<AppDbContext>(o => o.UseInMemoryDatabase("InMemoryDb"));
 
     //register api-specific services
-    builder.Services.AddSingleton<IErrorHandler, ErrorHandler>();
+    builder.Services.AddSingleton<IResultHandler, ResultHandler>();
     builder.Services.AddSingleton<IEmailService, EmailService>();
 
     //register infrastructure

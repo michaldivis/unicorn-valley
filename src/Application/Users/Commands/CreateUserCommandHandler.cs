@@ -6,13 +6,13 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Resul
 {
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IErrorHandler _errorHandler;
+    private readonly IResultHandler _resultHandler;
 
-    public CreateUserCommandHandler(IUserRepository userRepository, IUnitOfWork unitOfWork, IErrorHandler errorHandler)
+    public CreateUserCommandHandler(IUserRepository userRepository, IUnitOfWork unitOfWork, IResultHandler resultHandler)
     {
         _userRepository = userRepository;
         _unitOfWork = unitOfWork;
-        _errorHandler = errorHandler;
+        _resultHandler = resultHandler;
     }
 
     public async Task<Result<User>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
@@ -26,10 +26,10 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Resul
         var isUsernameUnique = await _userRepository.IsUsernameUniqueAsync(username);
 
         var userResult = User.Create(Guid.NewGuid(), username, isUsernameUnique);
+        await _resultHandler.HandleAsync(userResult, cancellationToken);
 
         if (userResult.IsFailed)
         {
-            await _errorHandler.HandleAsync(userResult, cancellationToken);
             return userResult;
         }
 

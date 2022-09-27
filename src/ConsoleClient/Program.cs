@@ -1,4 +1,6 @@
 ﻿using ApiClient;
+using ApiClient.Models;
+using Bogus;
 using OneOf;
 using Refit;
 using System;
@@ -10,8 +12,13 @@ var api = RestService.For<IUnicornValleyApi>("https://localhost:7135");
 
 Console.WriteLine("Running demo...");
 
+var randomUsername = new Faker<UserModel>()
+    .RuleFor(a => a.Username, f => f.Internet.Email())
+    .Generate()
+    .Username;
+
 PrintHeader("Create user");
-var createdUserResult = await HandleRequestAsync(() => api.CreateUser(new UnicornValley.Application.Users.Commands.CreateUserCommand { Username = "gandalf@magic.com" }));
+var createdUserResult = await HandleRequestAsync(() => api.CreateUser(new UnicornValley.Application.Users.Commands.CreateUserCommand { Username = randomUsername }));
 var createdUser = createdUserResult.AsT0;
 
 PrintHeader("Get all users");

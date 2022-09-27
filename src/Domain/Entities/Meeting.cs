@@ -53,7 +53,8 @@ public class Meeting : AggregateRoot
             return initializationResult;
         }
 
-        return meeting;
+        return Result.Ok(meeting)
+            .WithSuccess(DomainSuccesses.Meeting.Created(meeting));
     }
 
     private static Result InitializeWithLimitedNumberOfAttendees(Meeting meeting, int? maximumNumberOfAttendees)
@@ -112,7 +113,8 @@ public class Meeting : AggregateRoot
 
         _invitations.Add(invitation);
 
-        return invitation;
+        return Result.Ok(invitation)
+            .WithSuccess(DomainSuccesses.Meeting.InvitationSent(invitation));
     }
 
     public Result<Attendee> AcceptInvitation(Invitation invitation)
@@ -142,6 +144,7 @@ public class Meeting : AggregateRoot
 
         RaiseDomainEvent(new InvitationAccepted(invitation.Id, Id));
 
-        return attendee;
+        return Result.Ok(attendee)
+            .WithSuccess(DomainSuccesses.Meeting.InvitationAccepted(attendee));
     }
 }

@@ -1,5 +1,5 @@
 ﻿namespace UnicornValley.Domain.Abstractions;
-public interface IErrorHandler
+public interface IResultHandler
 {
     Task HandleAsync(IResultBase result, CancellationToken cancellationToken = default);
 }

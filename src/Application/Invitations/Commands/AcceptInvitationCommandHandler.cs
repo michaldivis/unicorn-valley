@@ -6,37 +6,40 @@ public class AcceptInvitationCommandHandler : IRequestHandler<AcceptInvitationCo
     private readonly IInvitationRepository _invitationRepository;
     private readonly IAttendeeRepository _attendeeRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IErrorHandler _errorHandler;
+    private readonly IResultHandler _resultHandler;
 
-    public AcceptInvitationCommandHandler(IMeetingRepository meetingRepository, IInvitationRepository invitationRepository, IAttendeeRepository attendeeRepository, IUnitOfWork unitOfWork, IErrorHandler errorHandler)
+    public AcceptInvitationCommandHandler(IMeetingRepository meetingRepository, IInvitationRepository invitationRepository, IAttendeeRepository attendeeRepository, IUnitOfWork unitOfWork, IResultHandler resultHandler)
     {
         _meetingRepository = meetingRepository;
         _invitationRepository = invitationRepository;
         _attendeeRepository = attendeeRepository;
         _unitOfWork = unitOfWork;
-        _errorHandler = errorHandler;
+        _resultHandler = resultHandler;
     }
 
     public async Task<Result<Attendee>> Handle(AcceptInvitationCommand request, CancellationToken cancellationToken)
     {
         var invitationResult = await _invitationRepository.FindByIdAsync(request.InvitationId, cancellationToken);
+        await _resultHandler.HandleAsync(invitationResult, cancellationToken);
+
         if (invitationResult.IsFailed)
         {
-            await _errorHandler.HandleAsync(invitationResult, cancellationToken);
             return invitationResult.ToResult<Attendee>();
         }
 
         var meetingResult = await _meetingRepository.FindByIdAsync(invitationResult.Value.MeetingId, cancellationToken);
+        await _resultHandler.HandleAsync(meetingResult, cancellationToken);
+
         if (meetingResult.IsFailed)
         {
-            await _errorHandler.HandleAsync(meetingResult, cancellationToken);
             return meetingResult.ToResult<Attendee>();
         }
 
         var acceptResult = meetingResult.Value.AcceptInvitation(invitationResult.Value);
+        await _resultHandler.HandleAsync(acceptResult, cancellationToken);
+
         if (acceptResult.IsFailed)
         {
-            await _errorHandler.HandleAsync(acceptResult, cancellationToken);
             return acceptResult;
         }
 

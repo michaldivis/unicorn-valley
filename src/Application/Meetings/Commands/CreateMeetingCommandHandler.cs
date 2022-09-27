@@ -4,31 +4,31 @@ public class CreateMeetingCommandHandler : IRequestHandler<CreateMeetingCommand,
     private readonly IUserRepository _userRepository;
     private readonly IMeetingRepository _meetingRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IErrorHandler _errorHandler;
+    private readonly IResultHandler _resultHandler;
 
-    public CreateMeetingCommandHandler(IUserRepository userRepository, IMeetingRepository meetingRepository, IUnitOfWork unitOfWork, IErrorHandler errorHandler)
+    public CreateMeetingCommandHandler(IUserRepository userRepository, IMeetingRepository meetingRepository, IUnitOfWork unitOfWork, IResultHandler resultHandler)
     {
         _userRepository = userRepository;
         _meetingRepository = meetingRepository;
         _unitOfWork = unitOfWork;
-        _errorHandler = errorHandler;
+        _resultHandler = resultHandler;
     }
 
     public async Task<Result<Meeting>> Handle(CreateMeetingCommand request, CancellationToken cancellationToken)
     {
         var userResult = await _userRepository.FindByIdAsync(request.CreatorId, cancellationToken);
+        await _resultHandler.HandleAsync(userResult, cancellationToken);
 
         if (userResult.IsFailed)
         {
-            await _errorHandler.HandleAsync(userResult, cancellationToken);
             return userResult.ToResult<Meeting>();
         }
 
         var meetingResult = Meeting.Create(Guid.NewGuid(), userResult.Value, request.Type, request.ScheduledAtUtc, request.Name, request.Location, request.MaximumNumberOfAttendees, request.InvitationValidBeforeInHours);
+        await _resultHandler.HandleAsync(meetingResult, cancellationToken);
 
         if (meetingResult.IsFailed)
         {
-            await _errorHandler.HandleAsync(meetingResult, cancellationToken);
             return meetingResult;
         }
 

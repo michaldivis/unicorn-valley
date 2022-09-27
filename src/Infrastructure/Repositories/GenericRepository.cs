@@ -23,14 +23,15 @@ public abstract class GenericRepository<TEntity> : IRepository<TEntity> where TE
             query = query.Include(includeProperty);
         }
 
-        var result = await query.FirstOrDefaultAsync(cancellationToken);
+        var entity = await query.FirstOrDefaultAsync(cancellationToken);
 
-        if(result is null)
+        if(entity is null)
         {
             return Result.Fail(DomainErrors.Common.NotFoundById(typeof(TEntity), id));
         }
 
-        return result;
+        return Result.Ok(entity)
+            .WithSuccess(DomainSuccesses.Common.FoundById(typeof(TEntity), id));
     }
 
     public void Add(TEntity entity)

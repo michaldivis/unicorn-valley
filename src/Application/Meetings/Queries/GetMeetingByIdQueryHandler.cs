@@ -3,21 +3,21 @@
 public class GetMeetingByIdQueryHandler : IRequestHandler<GetMeetingByIdQuery, Result<Meeting>>
 {
     private readonly IReadOnlyMeetingRepository _readOnlyMeetingRepository;
-    private readonly IErrorHandler _errorHandler;
+    private readonly IResultHandler _resultHandler;
 
-    public GetMeetingByIdQueryHandler(IReadOnlyMeetingRepository readOnlyMeetingRepository, IErrorHandler errorHandler)
+    public GetMeetingByIdQueryHandler(IReadOnlyMeetingRepository readOnlyMeetingRepository, IResultHandler resultHandler)
     {
         _readOnlyMeetingRepository = readOnlyMeetingRepository;
-        _errorHandler = errorHandler;
+        _resultHandler = resultHandler;
     }
 
     public async Task<Result<Meeting>> Handle(GetMeetingByIdQuery request, CancellationToken cancellationToken)
     {
         var userResult = await _readOnlyMeetingRepository.FindByIdAsync(request.MeetingId, cancellationToken);
+        await _resultHandler.HandleAsync(userResult, cancellationToken);
 
         if (userResult.IsFailed)
         {
-            await _errorHandler.HandleAsync(userResult, cancellationToken);
             return userResult;
         }
 

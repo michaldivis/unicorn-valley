@@ -14,17 +14,18 @@ public abstract class ReadOnlyGenericRepository<TEntity> : IReadOnlyRepository<T
 
     public async Task<Result<TEntity>> FindByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var result = await _dbSet
+        var entity = await _dbSet
             .AsNoTracking()
             .Where(a => a.Id == id)
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (result is null)
+        if (entity is null)
         {
             return Result.Fail(DomainErrors.Common.NotFoundById(typeof(TEntity), id));
         }
 
-        return result;
+        return Result.Ok(entity)
+            .WithSuccess(DomainSuccesses.Common.FoundById(typeof(TEntity), id));
     }
 
     public Task<List<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)

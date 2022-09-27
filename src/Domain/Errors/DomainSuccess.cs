@@ -1,6 +1,6 @@
 ﻿namespace UnicornValley.Domain.Errors;
 
-public class DomainError : IError
+public class DomainSuccess : ISuccess
 {
     public string Code { get; }
     public string Title { get; }
@@ -10,7 +10,7 @@ public class DomainError : IError
     public Dictionary<string, object> Metadata { get; } = new();
     public List<IError> Reasons { get; } = new();
 
-    public DomainError(string code, string title, string messageTemplate, object?[] args, Dictionary<string, object> metadata)
+    public DomainSuccess(string code, string title, string messageTemplate, object?[] args, Dictionary<string, object> metadata)
     {
         Code = code;
         Title = title;

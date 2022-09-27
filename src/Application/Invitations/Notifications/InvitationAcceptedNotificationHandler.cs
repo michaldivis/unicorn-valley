@@ -3,28 +3,30 @@ public class InvitationAcceptedNotificationHandler : INotificationHandler<Invita
 {
     private readonly IEmailService _emailService;
     private readonly IMeetingRepository _meetingRepository;
-    private readonly IErrorHandler _errorHandler;
+    private readonly IResultHandler _resultHandler;
 
-    public InvitationAcceptedNotificationHandler(IEmailService emailService, IMeetingRepository meetingRepository, IErrorHandler errorHandler)
+    public InvitationAcceptedNotificationHandler(IEmailService emailService, IMeetingRepository meetingRepository, IResultHandler resultHandler)
     {
         _emailService = emailService;
         _meetingRepository = meetingRepository;
-        _errorHandler = errorHandler;
+        _resultHandler = resultHandler;
     }
 
     public async Task Handle(InvitationAccepted notification, CancellationToken cancellationToken)
     {
         var meetingResult = await _meetingRepository.FindByIdAsync(notification.MeetingId, cancellationToken);
+        await _resultHandler.HandleAsync(meetingResult, cancellationToken);
+
         if (meetingResult.IsFailed)
         {
-            await _errorHandler.HandleAsync(meetingResult, cancellationToken);
             return;
         }
 
         var emailResult = await _emailService.SendInvitationAcceptedAsync(meetingResult.Value, cancellationToken);
+        await _resultHandler.HandleAsync(emailResult, cancellationToken);
+
         if (emailResult.IsFailed)
         {
-            await _errorHandler.HandleAsync(emailResult, cancellationToken);
             return;
         }
     }
