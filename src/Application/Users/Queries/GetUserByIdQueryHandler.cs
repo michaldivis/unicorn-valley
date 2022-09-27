@@ -13,7 +13,7 @@ public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, Result<
 
     public async Task<Result<User>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
     {
-        var userResult = await _readOnlyUserRepository.FindByIdAsync(request.UserId);
+        var userResult = await _readOnlyUserRepository.FindByIdAsync(request.UserId, cancellationToken);
 
         if (userResult.IsFailed)
         {

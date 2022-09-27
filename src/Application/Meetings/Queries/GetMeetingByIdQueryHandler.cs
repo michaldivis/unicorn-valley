@@ -13,7 +13,7 @@ public class GetMeetingByIdQueryHandler : IRequestHandler<GetMeetingByIdQuery, R
 
     public async Task<Result<Meeting>> Handle(GetMeetingByIdQuery request, CancellationToken cancellationToken)
     {
-        var userResult = await _readOnlyMeetingRepository.FindByIdAsync(request.MeetingId);
+        var userResult = await _readOnlyMeetingRepository.FindByIdAsync(request.MeetingId, cancellationToken);
 
         if (userResult.IsFailed)
         {

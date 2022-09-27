@@ -13,7 +13,7 @@ public class GetInvitationByIdQueryHandler : IRequestHandler<GetInvitationByIdQu
 
     public async Task<Result<Invitation>> Handle(GetInvitationByIdQuery request, CancellationToken cancellationToken)
     {
-        var userResult = await _readOnlyInvitationRepository.FindByIdAsync(request.InvitationId);
+        var userResult = await _readOnlyInvitationRepository.FindByIdAsync(request.InvitationId, cancellationToken);
 
         if (userResult.IsFailed)
         {

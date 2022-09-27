@@ -11,7 +11,7 @@ public class GetAllMeetingsQueryHandler : IRequestHandler<GetAllMeetingsQuery, L
 
     public async Task<List<Meeting>> Handle(GetAllMeetingsQuery request, CancellationToken cancellationToken)
     {
-        var meetings = await _readOnlyMeetingRepository.GetAllAsync();
+        var meetings = await _readOnlyMeetingRepository.GetAllAsync(cancellationToken);
         return meetings;
     }
 }

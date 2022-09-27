@@ -11,7 +11,7 @@ public class GetAllInvitationsQueryHandler : IRequestHandler<GetAllInvitationsQu
 
     public async Task<List<Invitation>> Handle(GetAllInvitationsQuery request, CancellationToken cancellationToken)
     {
-        var meetings = await _readOnlyInvitationRepository.GetAllAsync();
+        var meetings = await _readOnlyInvitationRepository.GetAllAsync(cancellationToken);
         return meetings;
     }
 }
