@@ -52,18 +52,37 @@ try
     {
         o.IncludeAbstractValidators = true;
     });
-    builder.Services.AddSwaggerDoc();
+
+    //configure versioned swagger docs
+    builder.Services.AddSwaggerDoc(s =>
+    {
+        s.DocumentName = "Initial Release";
+        s.Title = "Unicorn Valley API";
+        s.Version = "v1.0";
+    });
+    builder.Services.AddSwaggerDoc(maxEndpointVersion: 1, settings: s =>
+    {
+        s.DocumentName = "Release 1.0";
+        s.Title = "Unicorn Valley API";
+        s.Version = "v1.0";
+    });
+    builder.Services.AddSwaggerDoc(maxEndpointVersion: 2, settings: s =>
+    {
+        s.DocumentName = "Release 2.0";
+        s.Title = "Unicorn Valley API";
+        s.Version = "v2.0";
+    });
 
     var app = builder.Build();
 
     app.UseHttpsRedirection();
     app.UseFastEndpoints(c =>
     {
+        c.Versioning.Prefix = "v";
+
+        //configure custom validation failure response
         //there will soon be a cleaner way to access the HttpContext inside the error response builder, see https://github.com/FastEndpoints/FastEndpoints/issues/220
-
-        var ctxAccessor = app.Services.GetRequiredService<IHttpContextAccessor>();
-
-        //custom validation failure response
+        var ctxAccessor = app.Services.GetRequiredService<IHttpContextAccessor>();        
         c.Errors.ResponseBuilder = (failures, status) => ResponseUtils.CreateValidationProblemDetails(failures, ctxAccessor.HttpContext, status);
     });
 

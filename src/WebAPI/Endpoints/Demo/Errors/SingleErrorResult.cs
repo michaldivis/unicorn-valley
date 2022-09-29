@@ -2,13 +2,13 @@
 using UnicornValley.Domain.Errors;
 using UnicornValley.WebAPI.Utils;
 
-namespace UnicornValley.WebAPI.Endpoints.Demo;
+namespace UnicornValley.WebAPI.Endpoints.Demo.Errors;
 
 public class SingleErrorResult : EndpointWithoutRequest
 {
     public override void Configure()
     {
-        Get("/demo/single-error-result");
+        Get("/errors/single-error-result");
         AllowAnonymous();
         Summary(s => s.Summary = "Return a single error from a result");
     }
