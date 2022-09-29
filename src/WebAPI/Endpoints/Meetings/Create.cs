@@ -1,4 +1,5 @@
 ﻿using UnicornValley.Application.Meetings.Commands;
+using UnicornValley.WebAPI.Utils;
 
 namespace UnicornValley.WebAPI.Endpoints.Meetings;
 public class Create : Endpoint<CreateMeetingCommand>

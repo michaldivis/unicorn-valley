@@ -1,4 +1,5 @@
 ﻿using UnicornValley.Application.Users.Queries;
+using UnicornValley.WebAPI.Utils;
 
 namespace UnicornValley.WebAPI.Endpoints.Users;
 

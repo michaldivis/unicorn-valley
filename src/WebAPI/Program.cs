@@ -7,6 +7,7 @@ using UnicornValley.Domain.Repositories;
 using UnicornValley.Infrastructure.Repositories;
 using UnicornValley.WebAPI.SeedData;
 using UnicornValley.WebAPI.Services;
+using UnicornValley.WebAPI.Utils;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -47,13 +48,23 @@ try
     builder.Services.AddScoped<IReadOnlyAttendeeRepository, ReadOnlyAttendeeRepository>();
 
     builder.Services.AddMediatR(typeof(UnicornValley.Application.AssemblyMarker));
-    builder.Services.AddFastEndpoints();
+    builder.Services.AddFastEndpoints(o =>
+    {
+        o.IncludeAbstractValidators = true;
+    });
     builder.Services.AddSwaggerDoc();
 
     var app = builder.Build();
 
     app.UseHttpsRedirection();
-    app.UseFastEndpoints();
+    app.UseFastEndpoints(c =>
+    {
+        c.Errors.ResponseBuilder = (failures, status) =>
+        {
+            //custom validation failure response
+            return ResponseUtils.CreateValidationProblemDetails(failures, status);
+        };
+    });
 
     if (app.Environment.IsDevelopment())
     {

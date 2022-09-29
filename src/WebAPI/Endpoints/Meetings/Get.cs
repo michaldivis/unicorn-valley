@@ -1,4 +1,5 @@
 ﻿using UnicornValley.Application.Meetings.Queries;
+using UnicornValley.WebAPI.Utils;
 
 namespace UnicornValley.WebAPI.Endpoints.Meetings;
 

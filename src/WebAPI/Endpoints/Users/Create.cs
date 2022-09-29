@@ -1,4 +1,5 @@
 ﻿using UnicornValley.Application.Users.Commands;
+using UnicornValley.WebAPI.Utils;
 
 namespace UnicornValley.WebAPI.Endpoints.Users;
 public class Create : Endpoint<CreateUserCommand>

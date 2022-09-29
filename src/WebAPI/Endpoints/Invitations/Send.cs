@@ -1,4 +1,5 @@
 ﻿using UnicornValley.Application.Invitations.Commands;
+using UnicornValley.WebAPI.Utils;
 
 namespace UnicornValley.WebAPI.Endpoints.Invitations;
 public class Send : Endpoint<SendInvitationCommand>
