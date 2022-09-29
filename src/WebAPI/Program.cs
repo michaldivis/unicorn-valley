@@ -9,11 +9,7 @@ using UnicornValley.WebAPI.SeedData;
 using UnicornValley.WebAPI.Services;
 using UnicornValley.WebAPI.Utils;
 
-Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-    .Enrich.FromLogContext()
-    .WriteTo.Console()
-    .CreateLogger();
+Log.Logger = CreateStartupLogger();
 
 try
 {
@@ -21,21 +17,61 @@ try
 
     var builder = WebApplication.CreateBuilder(args);
 
-    //configure logging
+    AddLogging(builder);
+    AddDatabase(builder);
+    AddServices(builder);
+    AddFrameworks(builder);
+    AddVersionedDocs(builder);
+
+    var app = builder.Build();
+
+    ConfigureApp(app);
+    PrepareApp(app);
+
+    app.Run();
+
+    return 0;
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Host terminated unexpectedly");
+    return 1;
+}
+finally
+{
+    Log.CloseAndFlush();
+}
+
+static Serilog.Core.Logger CreateStartupLogger()
+{
+    return new LoggerConfiguration()
+        .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+        .Enrich.FromLogContext()
+        .WriteTo.Console()
+        .CreateLogger();
+}
+
+static void AddLogging(WebApplicationBuilder builder)
+{
     builder.Logging.ClearProviders();
     var logger = new LoggerConfiguration()
         .ReadFrom.Configuration(builder.Configuration)
         .CreateLogger();
     builder.Logging.AddSerilog(logger);
+}
 
-    //configure DB context
+static void AddDatabase(WebApplicationBuilder builder)
+{
     builder.Services.AddDbContext<AppDbContext>(o => o.UseInMemoryDatabase("InMemoryDb"));
+}
 
-    //register api-specific services
+static void AddServices(WebApplicationBuilder builder)
+{
+    //api-specific services
     builder.Services.AddSingleton<IResultHandler, ResultHandler>();
     builder.Services.AddSingleton<IEmailService, EmailService>();
 
-    //register infrastructure
+    //infrastructure services
     builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
     builder.Services.AddScoped<IUserRepository, UserRepository>();
     builder.Services.AddScoped<IMeetingRepository, MeetingRepository>();
@@ -46,14 +82,19 @@ try
     builder.Services.AddScoped<IReadOnlyMeetingRepository, ReadOnlyMeetingRepository>();
     builder.Services.AddScoped<IReadOnlyInvitationRepository, ReadOnlyInvitationRepository>();
     builder.Services.AddScoped<IReadOnlyAttendeeRepository, ReadOnlyAttendeeRepository>();
+}
 
+static void AddFrameworks(WebApplicationBuilder builder)
+{
     builder.Services.AddMediatR(typeof(UnicornValley.Application.AssemblyMarker));
     builder.Services.AddFastEndpoints(o =>
     {
         o.IncludeAbstractValidators = true;
     });
+}
 
-    //configure versioned swagger docs
+static void AddVersionedDocs(WebApplicationBuilder builder)
+{
     builder.Services.AddSwaggerDoc(s =>
     {
         s.DocumentName = "Initial Release";
@@ -72,17 +113,19 @@ try
         s.Title = "Unicorn Valley API";
         s.Version = "v2.0";
     });
+}
 
-    var app = builder.Build();
-
+static void ConfigureApp(WebApplication app)
+{
     app.UseHttpsRedirection();
+
     app.UseFastEndpoints(c =>
     {
         c.Versioning.Prefix = "v";
 
         //configure custom validation failure response
         //there will soon be a cleaner way to access the HttpContext inside the error response builder, see https://github.com/FastEndpoints/FastEndpoints/issues/220
-        var ctxAccessor = app.Services.GetRequiredService<IHttpContextAccessor>();        
+        var ctxAccessor = app.Services.GetRequiredService<IHttpContextAccessor>();
         c.Errors.ResponseBuilder = (failures, status) => ResponseUtils.CreateValidationProblemDetails(failures, ctxAccessor.HttpContext, status);
     });
 
@@ -91,19 +134,9 @@ try
         app.UseOpenApi();
         app.UseSwaggerUi3(s => s.ConfigureDefaults());
     }
+}
 
+static void PrepareApp(WebApplication app)
+{
     SeedDataInitializer.AddSeedData(app);
-
-    app.Run();
-
-    return 0;
-}
-catch (Exception ex)
-{
-    Log.Fatal(ex, "Host terminated unexpectedly");
-    return 1;
-}
-finally
-{
-    Log.CloseAndFlush();
 }
