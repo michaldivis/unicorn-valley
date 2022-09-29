@@ -59,11 +59,12 @@ try
     app.UseHttpsRedirection();
     app.UseFastEndpoints(c =>
     {
-        c.Errors.ResponseBuilder = (failures, status) =>
-        {
-            //custom validation failure response
-            return ResponseUtils.CreateValidationProblemDetails(failures, status);
-        };
+        //there will soon be a cleaner way to access the HttpContext inside the error response builder, see https://github.com/FastEndpoints/FastEndpoints/issues/220
+
+        var ctxAccessor = app.Services.GetRequiredService<IHttpContextAccessor>();
+
+        //custom validation failure response
+        c.Errors.ResponseBuilder = (failures, status) => ResponseUtils.CreateValidationProblemDetails(failures, ctxAccessor.HttpContext, status);
     });
 
     if (app.Environment.IsDevelopment())

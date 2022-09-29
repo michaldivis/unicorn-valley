@@ -24,6 +24,9 @@ public class ApiProblemDetails
     [JsonPropertyName("problems")]
     public List<ApiProblemDetails>? Problems { get; set; }
 
+    [JsonPropertyName("errors")]
+    public List<ApiValidationError>? Errors { get; set; }
+
     public static ApiProblemDetails Unknown(string instance, int statusCode) => new()
     {
         Type = "Unknown",

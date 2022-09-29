@@ -39,7 +39,7 @@ public static class ResponseUtils
         var multipleProblemDetails = new ProblemDetails
         {
             Type = "/errors/multiple",
-            Detail = "There were multiple problems that have occurred",
+            Title = "There were multiple problems that have occurred",
             Instance = endpoint.HttpContext.Request.Path,
             Status = (int)httpStatusCode
         };
@@ -50,38 +50,24 @@ public static class ResponseUtils
         return multipleProblemDetails;
     }
 
-    public static ProblemDetails CreateValidationProblemDetails(IEnumerable<FluentValidation.Results.ValidationFailure> failures, int statusCode)
+    public static ProblemDetails CreateValidationProblemDetails(IEnumerable<FluentValidation.Results.ValidationFailure> failures, HttpContext? context, int statusCode)
     {
         var validationProblemDetails = new ProblemDetails
         {
-            Type = "/errors/multiple-validation-errors",
-            Detail = "One or more validation problems occurred",
+            Type = "/errors/validation",
+            Title = "One or more validation problems occurred",
+            Instance = context?.Request.Path,
             Status = statusCode
         };
 
-        var problems = new List<ProblemDetails>();
-
-        foreach (var failure in failures)
+        var errors = failures.Select(a => new
         {
-            var problem = new ProblemDetails
-            {
-                Type = "/errors/validation-error",
-                Title = "Validation failed",
-                Detail = failure.ErrorMessage
-            };
+            Property = a.PropertyName,
+            Message = a.ErrorMessage,
+            Value = a.AttemptedValue
+        });
 
-            var metadata = new Dictionary<string, object>
-                {
-                    { "propertyName", failure.PropertyName },
-                    { "attemptedValue", failure.AttemptedValue }
-                };
-
-            problem.Extensions.Add("metadata", metadata);
-
-            problems.Add(problem);
-        }
-
-        validationProblemDetails.Extensions.Add("problems", problems);
+        validationProblemDetails.Extensions.Add("errors", errors);
 
         return validationProblemDetails;
     }

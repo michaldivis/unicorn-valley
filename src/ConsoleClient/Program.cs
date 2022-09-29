@@ -38,6 +38,15 @@ _ = await HandleRequestAsync(() => api.GetSingleError());
 PrintHeader("Errors - multiple");
 _ = await HandleRequestAsync(() => api.GetMultipleErrors());
 
+PrintHeader("Errors - validation");
+_ = await HandleRequestAsync(() => api.CreateMeeting(new UnicornValley.Application.Meetings.Commands.CreateMeetingCommand
+{
+    CreatorId = createdUser.Id,
+    Name = "",
+    Location = "",
+    ScheduledAtUtc = DateTime.UtcNow.AddDays(10),
+    Type = UnicornValley.Domain.Enums.MeetingType.WithLimitedNumberOfAttendees
+}));
 
 PrintHeader("Create meeting");
 var createdMeetingResult = await HandleRequestAsync(() => api.CreateMeeting(new UnicornValley.Application.Meetings.Commands.CreateMeetingCommand
