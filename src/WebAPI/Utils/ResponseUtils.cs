@@ -39,7 +39,7 @@ public static class ResponseUtils
         var multipleProblemDetails = new ProblemDetails
         {
             Type = "/errors/multiple",
-            Title = "There were multiple problems that have occurred",
+            Title = "Multiple problems occured",
             Instance = endpoint.HttpContext.Request.Path,
             Status = (int)httpStatusCode
         };
@@ -55,7 +55,7 @@ public static class ResponseUtils
         var validationProblemDetails = new ProblemDetails
         {
             Type = "/errors/validation",
-            Title = "One or more validation problems occurred",
+            Title = "One or more validation errors occurred",
             Instance = context?.Request.Path,
             Status = statusCode
         };

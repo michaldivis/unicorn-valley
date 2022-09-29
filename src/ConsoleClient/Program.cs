@@ -5,7 +5,9 @@ using OneOf;
 using Refit;
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 var api = RestService.For<IUnicornValleyApi>("https://localhost:7135");
@@ -121,7 +123,10 @@ static void PrintData(object? data, bool success)
     Console.ForegroundColor = success ? ConsoleColor.Green : ConsoleColor.Red;
 
     Console.WriteLine(success ? "Success response:" : "Error response:");
-    var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
+    var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { 
+        WriteIndented = true,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+    });
     Console.WriteLine(json);
 
     Console.ForegroundColor = originalColor;
