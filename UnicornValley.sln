@@ -23,9 +23,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Tests.Unit", "tests\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Architecture.Tests", "tests\Architecture.Tests\Architecture.Tests.csproj", "{CEEF5221-EE71-400B-874D-B5DF11F74BDC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleClient", "src\ConsoleClient\ConsoleClient.csproj", "{7B2BFC3A-40B3-423A-AC6D-4867440A5C4C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleClient", "src\ConsoleClient\ConsoleClient.csproj", "{7B2BFC3A-40B3-423A-AC6D-4867440A5C4C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiClient", "src\ApiClient\ApiClient.csproj", "{C3E38D94-5C2C-4B47-B4F1-D923F1552529}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiClient", "src\ApiClient\ApiClient.csproj", "{C3E38D94-5C2C-4B47-B4F1-D923F1552529}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8541E391-4331-4DF2-ADF7-408368B796B1}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
