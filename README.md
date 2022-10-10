@@ -1,3 +1,5 @@
+﻿﻿<img src="assets/icon.png" width="200">
+
 # Unicorn Valley
 
 This is a solution an example of a ASP.NET Core Minimal API and a console client following the principles of Clean Architecture, Domain Driver Design, an a few other principles and patterns.
