@@ -43,7 +43,7 @@ This project has a rich domain model. The domain models are responsible for all 
 Example: [Meeting.cs](src/Domain/Entities/Meeting.cs)
 
 ## CQRS & validation
-The Application layer contains commands and queries. Both commands and queries can be validated using FluentValidation.
+The Application layer contains commands and queries. Both commands and queries can be validated using [FluentValidation](https://docs.fluentvalidation.net/en/latest/).
 
 Example command: [CreateUserCommand.cs](src/Application/Users/Commands/CreateUserCommand.cs)\
 Example command validator: [CreateUserCommandValidator.cs](src/Application/Users/Commands/CreateUserCommandValidator.cs)\
@@ -57,7 +57,7 @@ Example: [Create User Endpoint.cs](src/WebAPI/Endpoints/Users/Create.cs).
 ## Result objects
 I'm using result objects to return complex results (success/failure + success/error messages).
 
-A domain method, such a the `Create` user method will return a `Result<User>`. This result object will either contain a valid `User` instance of an error message.
+A domain method, such a the [Create User Method](src/Domain/Entities/User.cs). will return a `Result<User>`. This result object will either contain a valid `User` instance of an error message.
 
 The result object is (in case of an error) later converted into an API problem details response [here](src/WebAPI/Utils/ResponseUtils.cs).
 
