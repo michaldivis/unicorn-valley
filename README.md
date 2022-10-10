@@ -40,12 +40,14 @@ See the [Meeting.cs](src/Domain/Entities/Meeting.cs) class for reference.
 ## CQRS & validation
 The Application layer contains commands and queries. Both commands and queries can be validated using FluentValidation.
 
-Example command: [CreateUserCommand.cs](src/Application/Users/Commands/CreateUserCommand.cs)
-Example command validator: [CreateUserCommandValidator.cs](src/Application/Users/Commands/CreateUserCommandValidator.cs)
+Example command: [CreateUserCommand.cs](src/Application/Users/Commands/CreateUserCommand.cs)\
+Example command validator: [CreateUserCommandValidator.cs](src/Application/Users/Commands/CreateUserCommandValidator.cs)\
 Example command handler: [CreateUserCommandHandler.cs](src/Application/Users/Commands/CreateUserCommandHandler.cs)
 
 ## REPR using Fast Endpoints
-The minimal API is implemented using the [Fast Endpoints](https://fast-endpoints.com/) library. There's a file per endpoint. Example: [Create User Endpoint.cs](src/WebAPI/Endpoints/Users/Create.cs).
+The minimal API is implemented using the [Fast Endpoints](https://fast-endpoints.com/) library. There's one file per endpoint. 
+
+Example: [Create User Endpoint.cs](src/WebAPI/Endpoints/Users/Create.cs).
 
 ## Result objects
 I'm using result objects to return complex results (success/failure + success/error messages).
